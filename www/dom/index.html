@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+  <head>
+    <title>QEWD-JSdb XML DOM Demo</title> 
+    <style>
+      .main-table td {
+        vertical-align:middle;
+        text-align:left;
+        border:1px solid #000; 
+      }
+      .jsdb-table td {border: none}
+    </style>
+  </head> 
+  <body>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/ewd-client.js"></script>
+    <script src="js/app.js"></script>
+
+    <h3 id="header">
+      QEWD-JSdb XML DOM Demo
+    </h3>
+
+    <table class="main-table" width="100%">
+      <tr>
+        <td>
+          <div id="source-title">
+            Test XML Document
+          </div>
+          <div>
+            <button id="sourceBtn">Toggle</button>
+          </div>
+        </td>
+        <td>
+          <pre id="record"></pre>
+        </td>
+      </tr>
+      <tr>
+        <td width="20%">
+
+          <center>
+            <div>
+              <button id="clearBtn">Clear Down Saved DOM</button>
+            </div>
+          </center>
+
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbDom', 'demo').delete();
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="parseBtn">Parse as XML</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/dom/parser.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre id="parseExample">
+doc = this.documentStore.use('jsdbDom', 'demo')
+doc.enable_dom()
+ok = doc.dom.parser.parseText(xml)
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="parse-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Indentation: <input id="output-indent" type="number" min="0" value="2">
+          </div>
+          <center>
+            <div>
+              <button id="outputBtn">Output as XML</button>
+              <br />
+              <button id="outputAsJSONBtn">Output as JSON</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/dom/output.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbDom', 'demo')
+                <br />
+                doc.enable_dom()
+                <br />
+                ok = doc.dom.output(indent)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="output-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            TagName: <input id="byTagName-tagName" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="byTagNameBtn">getElementsByTagName</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/dom/getElementsByTagName.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbDom', 'demo')
+doc.enable_dom()
+nodeList = doc.dom.getElementsByTagName(tagName);
+var results = [];
+nodeList.forEach(function(node) {
+  results.push({
+    nodeName: node.nodeName,
+    nodeType: node.nodeType,
+    text: node.textContent,
+    attributes: node.getAttributes()
+  });
+});
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="byTagName-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Id: <input id="byId-id" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="byIdBtn">getElementById</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/dom/getElementById.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbDom', 'demo')
+doc.enable_dom()
+node = doc.dom.getElementById(id);
+result = {
+  nodeName: node.nodeName,
+  nodeType: node.nodeType,
+  text: node.textContent,
+  attributes: node.getAttributes()
+}
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="byId-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            XPath Query: <input id="xpath-text" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="xpathBtn">XPath</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/dom/xpath.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbDom', 'demo')
+doc.enable_dom()
+
+nodes = doc.dom.xpath(xpath)
+
+arr = [];
+nodes.forEach(function(node) {
+  obj = {
+    nodeName: node.nodeName,
+    nodeType: node.nodeType,
+    nodeValue: node.nodeValue
+  }
+  if (node.nodeType === 1) {
+    obj.text = node.textContent;
+    obj.attributes = node.getAttributes();
+  }
+  arr.push(obj);
+});
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="xpath-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Parent Element Id: <input id="removeSubTree-id" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="removeSubTreeBtn">Remove an Element and Children</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/dom/removeChild.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbDom', 'demo')
+doc.enable_dom()
+node = doc.dom.getElementById(id)
+node.parentNode.removeChild(node, true)
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="removeSubTree-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Element Id: <input id="removeElement-id" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="removeElementBtn">Remove Element, Leave Children</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/dom/removeAsParent.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbDom', 'demo')
+doc.enable_dom()
+node = doc.dom.getElementById(id)
+node.removeAsParent()
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="removeElement-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Parent Element (#id or XPath): <input id="appendElement-id" type="text">
+          </div>
+          <div>
+            New Element Tag: <input id="appendElement-tag" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="appendElementBtn">appendElement</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/dom/appendElement.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbDom', 'demo')
+doc.enable_dom()
+if (id === '#document') {
+  if (!doc.exists) {
+    node = doc.dom.createDocument();
+  }
+  else {
+    if (doc.dom.documentElement !== null) {
+      return {error: 'DOM already has a Document Element'};
+    }
+    node = doc.dom.documentNode;
+  }
+}
+else {
+  if (id[0] === '#') {
+    node = doc.dom.getElementById(id.substr(1));
+    if (!node) {
+      return {error: 'Id ' + messageObj.id + ' was not found in the DOM'};
+    }
+  }
+  else {
+    var nodes = doc.dom.xpath(id);
+    if (nodes.length === 0) {
+      return {error: 'XPath ' + id + ' did not find any nodes'};
+    }
+    node = nodes[0];
+    if (node.nodeType !== 1) {
+      return {error: 'XPath ' + id + ' did not return an element node'};
+    }
+  }
+}
+parent.appendElement({
+  tagName: tagName,
+  attributes: attributesObj,
+  text: text
+})
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="appendElement-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+    </table>
+  </body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+  <head>
+    <title>QEWD-JSdb Key/Value Store Demo</title> 
+    <style>
+      .main-table td {
+        vertical-align:middle;
+        text-align:left;
+        border:1px solid #000; 
+      }
+      .jsdb-table td {border: none}
+    </style>
+  </head> 
+  <body>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/ewd-client.js"></script>
+    <script src="js/app.js"></script>
+
+    <h3 id="header">
+      QEWD-JSdb Key/Value Store Demo
+    </h3>
+
+    <table class="main-table" width="100%">
+      <tr>
+        <td>Test Data Object</td>
+        <td>
+          <pre id="record"></pre>
+        </td>
+      </tr>
+      <tr>
+        <td width="20%">
+
+          <center>
+            <div>
+              <button id="clearBtn">Clear Down Saved KV Store</button>
+            </div>
+          </center>
+
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo').delete();
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Key: <input id="add-key" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="addBtn">add</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/kvs/add.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo')
+                <br />
+                doc.enable_kvs()
+                <br />
+                ok = doc.kvs.add(key, obj)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="add-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Key: <input id="edit-key" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="editBtn">edit</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/kvs/edit.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo')
+                <br />
+                doc.enable_kvs()
+                <br />
+                ok = doc.kvs.edit(key, obj)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="edit-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Key: <input id="delete-key" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="deleteBtn">delete</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/kvs/delete.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo')
+                <br />
+                doc.enable_kvs()
+                <br />
+                ok = doc.kvs.delete(key)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="delete-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Key: <input id="getByKey-key" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="getByKeyBtn">get_by_key</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/kvs/get_by_key.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo')
+                <br />
+                doc.enable_kvs()
+                <br />
+                obj = doc.kvs.get_by_key(key)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="getByKey-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Field name to index: <input id="addIndex-field" type="text">
+          </div>
+          <div>
+            Transform:
+            <select id="addIndex-transform">
+              <option value="none">none</option>
+              <option value="toLowerCase">toLowerCase</option>
+              <option value="toString">toString</option>
+              <option value="toInteger">toInteger</option>
+            </select>
+          </div>
+          <center>
+            <div>
+              <button id="addIndexBtn">addIndex</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/kvs/addIndex.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo')
+                <br />
+                doc.enable_kvs()
+                <br />
+                doc.kvs.addIndex(fieldName, transform)
+                <br />
+                doc.kvs.reindex()
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="addIndex-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="getIndicesBtn">getIndices</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/kvs/getIndices.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo')
+                <br />
+                doc.enable_kvs()
+                <br />
+                indexArray = doc.kvs.getIndices()
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="getIndices-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Index Field: <input id="getByIndex-field" type="text">
+          </div>
+          <div>
+            Index Value: <input id="getByIndex-value" type="text">
+          </div>
+            <input type="radio" name="getByIndex-data" value="true"> Return Data Objects<br>
+            <input type="radio" name="getByIndex-data" value="false" checked> Return Keys Only
+          <div>
+          </div>
+          <center>
+            <div>
+              <button id="getByIndexBtn">get_by_index</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/kvs/get_by_index.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo')
+                <br />
+                doc.enable_kvs()
+                <br />
+                resultObjOrArray = doc.kvs.get_by_index(indexField, value)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="getByIndex-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Field name to stop indexing: <input id="deleteIndex-field" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="deleteIndexBtn">deleteIndex</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/kvs/deleteIndex.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbKvs', 'demo')
+                <br />
+                doc.enable_kvs()
+                <br />
+                doc.kvs.deleteIndex(fieldName)
+                <br />
+                doc.kvs.reindex()
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="deleteIndex-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+    </table>
+  </body>
+</html>

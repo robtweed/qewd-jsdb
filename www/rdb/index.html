@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+  <head>
+    <title>QEWD-JSdb Relational Database Demo</title> 
+    <style>
+      .main-table td {
+        vertical-align:middle;
+        text-align:left;
+        border:1px solid #000; 
+      }
+      .jsdb-table td {border: none}
+    </style>
+  </head> 
+  <body>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/ewd-client.js"></script>
+    <script src="js/app.js"></script>
+
+    <h3 id="header">
+      QEWD-JSdb Relational Database Demo
+    </h3>
+
+    <table class="main-table" width="100%">
+      <tr>
+        <td>Test Data Object</td>
+        <td>
+          <pre id="record"></pre>
+        </td>
+      </tr>
+      <tr>
+        <td width="20%">
+
+          <center>
+            <div>
+              <button id="clearBtn">Clear Down Saved Relational Database</button>
+            </div>
+          </center>
+
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbRdb', 'demo').delete();
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="createTableBtn">Create Table</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/rdb/sql.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbRdb', 'demo')
+doc.enable_rdb()
+sql = 'create table jsdbdemo (' +
+  'id int not null,' +
+  'firstName varchar(255),' +
+  'lastName  varchar(255),' +
+  'city varchar(255),' +
+  'gender varchar(10),' +
+  'constraint pk_jsdbdemo primary key (id)' +
+')';
+results = doc.rdb.sql(sql)
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="createTable-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Index name: <input id="addIndex-name" type="text">
+          </div>
+          <div>
+            Index fields (comma-delimited): <input id="addIndex-fields" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="addIndexBtn">Create Index</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/rdb/sql.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbRdb', 'demo')
+doc.enable_rdb()
+doc.rdb.sql('create index by_city on jsdbdemo (city, id)')
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="addIndex-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="insertBtn">Insert Record</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/rdb/sql.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbRdb', 'demo')
+doc.enable_rdb()
+
+sql = "insert into jsdbdemo (id, firstName, lastName, city, gender)' +
+         'values (1, 'Rob', 'Tweed', 'Redhill', 'Male')"
+
+results = doc.rdb.sql(sql)
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="insert-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="selectAllBtn">select * from jsdbdemo</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/rdb/sql.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbRdb', 'demo')
+doc.enable_rdb()
+
+sql = 'select * from jsdbdemo'
+
+results = doc.rdb.sql(sql)
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="selectAll-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            select: <input id="selectCustom-fields" type="text">
+          </div>
+          <div>
+            where: <input id="selectCustom-where" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="selectCustomBtn">Custom Select</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/rdb/sql.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbRdb', 'demo')
+doc.enable_rdb()
+
+sql = "select a.firstName, a.lastName from jsdbdemo a where a.city = 'Redhill'"
+
+results = doc.rdb.sql(sql)
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="selectCustom-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+
+      <tr>
+        <td width="20%">
+          <div>
+            where: <input id="delete-where" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="deleteBtn">Delete</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/rdb/sql.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+               <pre>
+doc = this.documentStore.use('jsdbRdb', 'demo')
+doc.enable_rdb()
+
+sql = "delete from jsdbdemo a where a.city = 'Redhill'"
+
+results = doc.rdb.sql(sql)
+               </pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="delete-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+    </table>
+  </body>
+</html>

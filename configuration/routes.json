@@ -1,0 +1,137 @@
+[
+  {
+    "uri": "/jsdb/document",
+    "method": "GET",
+    "handler": "document_get"
+  },
+  {
+    "uri": "/jsdb/document",
+    "method": "POST",
+    "handler": "document_set"
+  },
+  {
+    "uri": "/jsdb/rdb/table/:documentName",
+    "method": "POST",
+    "handler": "rdb_sqlTable"
+  },
+  {
+    "uri": "/jsdb/rdb/sql",
+    "method": "POST",
+    "handler": "rdb_sql"
+  },
+  {
+    "uri": "/jsdb/dom/:documentName/xml",
+    "method": "POST",
+    "handler": "dom_parseXml"
+  },
+  {
+    "uri": "/jsdb/dom/:documentName/xml",
+    "method": "GET",
+    "handler": "dom_getXml"
+  },
+  {
+    "uri": "/jsdb/dom/:documentName/elementsByTagName",
+    "method": "GET",
+    "handler": "dom_getElementsByTagName"
+  },
+  {
+    "uri": "/jsdb/dom/:documentName/elementById",
+    "method": "GET",
+    "handler": "dom_getElementById"
+  },
+  {
+    "uri": "/jsdb/dom/:documentName/xpath",
+    "method": "GET",
+    "handler": "dom_xpath"
+  },
+  {
+    "uri": "/jsdb/kvs/:documentName/populate",
+    "method": "GET",
+    "handler": "kvs_populate"
+  },
+  {
+    "uri": "/jsdb/kvs/:documentName/index/:indexName",
+    "method": "POST",
+    "handler": "kvs_addIndex"
+  },
+  {
+    "uri": "/jsdb/kvs/:documentName/index/:indexName",
+    "method": "DELETE",
+    "handler": "kvs_deleteIndex"
+  },
+  {
+    "uri": "/jsdb/kvs/:documentName/:key",
+    "method": "POST",
+    "handler": "kvs_add"
+  },
+  {
+    "uri": "/jsdb/kvs/:documentName/:key",
+    "method": "GET",
+    "handler": "kvs_getByKey"
+  },
+  {
+    "uri": "/jsdb/kvs/:documentName/:key",
+    "method": "PUT",
+    "handler": "kvs_edit"
+  },
+  {
+    "uri": "/jsdb/kvs/:documentName/:key",
+    "method": "DELETE",
+    "handler": "kvs_delete"
+  },
+  {
+    "uri": "/jsdb/kvs/:documentName/byIndex/:indexName/:value",
+    "method": "GET",
+    "handler": "kvs_getByIndex"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/populate",
+    "method": "GET",
+    "handler": "list_populate"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/lpush",
+    "method": "POST",
+    "handler": "list_lpush"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/rpush",
+    "method": "POST",
+    "handler": "list_rpush"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/insertBefore/:position",
+    "method": "POST",
+    "handler": "list_insertBefore"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/lrange",
+    "method": "GET",
+    "handler": "list_lrange"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/lpop",
+    "method": "GET",
+    "handler": "list_lpop"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/rpop",
+    "method": "GET",
+    "handler": "list_rpop"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/count",
+    "method": "GET",
+    "handler": "list_count"
+  },
+  {
+    "uri": "/jsdb/list/:documentName/ltrim",
+    "method": "GET",
+    "handler": "list_ltrim"
+  },
+  {
+    "uri": "/jsdb/shutdown",
+    "method": "POST",
+    "handler": "qewd_shutdown"
+  }
+]

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+  <head>
+    <title>QEWD-JSdb List Demo</title> 
+    <style>
+      .main-table td {
+        vertical-align:middle;
+        text-align:left;
+        border:1px solid #000; 
+      }
+      .jsdb-table td {border: none}
+    </style>
+  </head> 
+  <body>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/ewd-client.js"></script>
+    <script src="js/app.js"></script>
+
+    <h3 id="header">
+      QEWD-JSdb Lists Demo
+    </h3>
+
+    <table class="main-table" width="100%">
+      <tr>
+        <td>Test Data Object</td>
+        <td>
+          <pre id="record"></pre>
+        </td>
+      </tr>
+      <tr>
+        <td width="20%">
+
+          <center>
+            <div>
+              <button id="clearBtn">Clear Down Saved List</button>
+            </div>
+          </center>
+
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo').delete();
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="countBtn">count</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/list/count.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo')
+                <br />
+                doc.enable_list()
+                <br />
+                doc.list.count()
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="count-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="lpushBtn">lpush</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/list/lpush.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo')
+                <br />
+                doc.enable_list()
+                <br />
+                doc.list.lpush(obj)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="lpush-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="rpushBtn">rpush</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/list/rpush.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo')
+                <br />
+                doc.enable_list()
+                <br />
+                doc.list.rpush(obj)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="rpush-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Before member #: <input id="insertBefore-position" type="number" min="0" value="0">
+          </div>
+          <center>
+            <div>
+              <button id="insertBeforeBtn">insert_before</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/list/insert_before.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo')
+                <br />
+                doc.enable_list()
+                <br />
+                doc.list.insert_before(position, obj)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="insertBefore-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="lpopBtn">lpop</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/list/lpop.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo')
+                <br />
+                doc.enable_list()
+                <br />
+                obj = doc.list.lpop()
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="lpop-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="rpopBtn">rpop</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/list/rpop.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo')
+                <br />
+                doc.enable_list()
+                <br />
+                obj = doc.list.rpop()
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="rpop-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            From: <input id="lrange-from" type="number" min="0" value="0">
+          </div>
+          <div>
+            To: &nbsp;&nbsp;&nbsp;&nbsp;<input id="lrange-to" type="number" min="0">
+          </div>
+          <center>
+            <div>
+              <button id="lrangeBtn">lrange</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/list/lrange.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo')
+                <br />
+                doc.enable_list()
+                <br />
+                arrayOfObjects = doc.list.lrange(from, to)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="lrange-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+
+      <tr>
+        <td width="20%">
+          <div>
+            From: <input id="ltrim-from" type="number" min="0" value="0">
+          </div>
+          <div>
+            To: &nbsp;&nbsp;&nbsp;&nbsp;<input id="ltrim-to" type="number" min="0">
+          </div>
+          <center>
+            <div>
+              <button id="ltrimBtn">ltrim</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/list/ltrim.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbList', 'demo')
+                <br />
+                doc.enable_list()
+                <br />
+                ok = doc.list.ltrim(from, to)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="ltrim-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+    </table>
+  </body>
+</html>
