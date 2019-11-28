@@ -1,0 +1,17 @@
+  {
+    "qewd": {
+      "poolSize": 2,
+      "port": 8080,
+      "bodyParser": "body-parser",
+      "database": {
+        "type": "dbx",
+        "params": {
+          "database": "IRIS",
+          "path": "/ISC/dur/mgr",
+          "username": "_SYSTEM",
+          "password": "secret123",
+          "namespace": "USER"
+        }
+      }
+    }
+  }

@@ -1,0 +1,13 @@
+{
+  "name": "qewd-jsdb",
+  "version": "1.0.0",
+  "description": "QEWD-JSDb Showcase",
+  "author": "Rob Tweed <rtweed@mgateway.com>",
+  "scripts": {
+    "start": "node node_modules/qewd/up/run_native"
+  },
+  "dependencies": {
+    "qewd": "",
+    "mg-dbx": ""
+  }
+}
