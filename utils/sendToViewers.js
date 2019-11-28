@@ -22,7 +22,7 @@ module.exports = function(global, subscripts) {
 
   var status = this.db.dbx.function('zwr^qewdInterface', ref);
   var prefix = '/opt/qewd/mapped/';
-  if (fs.existsSync('/ISC/dur') {
+  if (fs.existsSync('/ISC/dur')) {
     prefix = '';
   }
   var filePath = prefix + 'go-' + process.pid + '.txt';
