@@ -21,7 +21,11 @@ module.exports = function(global, subscripts) {
   jsdbCommand = jsdbCommand + '.getDocument(true)';  
 
   var status = this.db.dbx.function('zwr^qewdInterface', ref);
-  var filePath = '/opt/qewd/mapped/go-' + process.pid + '.txt';
+  var prefix = '/opt/qewd/mapped/';
+  if (fs.existsSync('/ISC/dur') {
+    prefix = '';
+  }
+  var filePath = prefix + 'go-' + process.pid + '.txt';
   if (fs.existsSync(filePath)) {
     var text = fs.readFileSync(filePath, 'utf8');
     fs.removeSync(filePath);

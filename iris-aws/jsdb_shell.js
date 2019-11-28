@@ -24,25 +24,21 @@
  |  limitations under the License.                                          |
  ----------------------------------------------------------------------------
 
-  24 November 2019
+  28 November 2019
 
 */
-
-const ydb_release = 'r1.28';
-
 
 function jsdb() {
   var qewd_mg_dbx = require('qewd-mg-dbx');
   var DocumentStore = require('ewd-document-store');
-  var os = require('os');
-  var arch = os.arch();
-  if (arch === 'x64') arch = 'x86';
 
   var params = {
     database: {
-      type: 'YottaDB',
-      release: ydb_release,
-      architecture: arch
+      type: 'IRIS',
+      path: '/ISC/dur/mgr',
+      username: '_SYSTEM',
+      password: 'secret123',
+      namespace: 'USER'
     }
   };
 
@@ -56,4 +52,3 @@ function jsdb() {
 };
 
 module.exports = jsdb();
-
