@@ -93,8 +93,8 @@ one of the supported database models:
 
 For the IRIS / AWS Version, see [these instructions](./IRIS.md).
 
-The quickest way to try out QEWD is using the pre-built Docker version which will run on
-any Linux system or on a Raspberry Pi.
+However, the quickest way to try out QEWD is using the pre-built Docker version which will run on
+any Linux system or even on a Raspberry Pi.
 
 Here's all you need to do:
 
