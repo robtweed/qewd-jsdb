@@ -173,6 +173,12 @@ There's a QEWD application/page for each of the supported QEWD-JSdb models.  Sta
         http://xx.xx.xx.xx:8080/dom
 
 
+Each of these allows you to explore many of the capabilities of each database model, showing you, in 
+real time, how the data is physically stored and manipulated in the YottaDB database in response to the various
+database model APIs, and how that data is projected via
+QEWD-JSdb's the persistent JavaScript object abstraction.
+
+
 # What Can I do with QEWD-JSdb?
 
 The full functionality of QEWD-JSdb is built-in to QEWD, and available for you to use in your
@@ -206,15 +212,6 @@ You'll now see the Overview panel, from where you can monitor your QEWD run-time
 
 Click the tabs in the banner to view your YottDB Global Storage and inspect any QEWD Sessions.
 
-
-# Further Information on Developing using QEWD-Up
-
-You now have a fully-working IRIS-based QEWD-Up environment, and you can begin to try building your own applications.
-
-For further information about QEWD-Up:
-
-- [Information and background to QEWD-Up](https://github.com/robtweed/qewd/tree/master/up)
-- [Detailed QEWD-Up Documentation](https://github.com/robtweed/qewd/tree/master/up/docs)
 
 # Backing up the YottaDB Database
 
