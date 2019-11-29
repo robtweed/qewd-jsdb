@@ -184,7 +184,8 @@ QEWD-JSdb's the persistent JavaScript object abstraction.
 The full functionality of QEWD-JSdb is built-in to QEWD, and available for you to use in your
 applications if you wish.  You can use QEWD-JSdb instead of any other more "traditional" database.
 
-Take a look at the source code in this *QEWD-jsdb* repository to see how you can use it:
+Take a look at the source code in this *QEWD-jsdb* repository to see how quick, simple and
+easy it is to use:
 
 - See how the [front-end of QEWD Web-Socket Applications](https://github.com/robtweed/qewd-jsdb/tree/master/www) 
 can be very simply and rapidly built.  In particular look at the *app.js* files, eg:
