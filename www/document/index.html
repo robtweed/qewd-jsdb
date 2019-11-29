@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+  <head>
+    <title>QEWD-JSdb Document/Persistent JS Objects Demo</title> 
+    <style>
+      .main-table td {
+        vertical-align:middle;
+        text-align:left;
+        border:1px solid #000; 
+      }
+      .jsdb-table td {border: none}
+    </style>
+  </head> 
+  <body>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/ewd-client.js"></script>
+    <script src="js/app.js"></script>
+
+    <h3 id="header">
+      QEWD-JSdb Document/Persistent JS Objects Demo
+    </h3>
+
+    <table class="main-table" width="100%">
+      <tr>
+        <td>
+          Test JSON
+          <div>
+            <button id="hideJSONBtn">Hide</button>
+          </div>
+          <div>
+            <button id="showJSONBtn">Show</button>
+          </div>
+        </td>
+        <td>
+          <pre id="record"></pre>
+        </td>
+      </tr>
+      <tr>
+        <td width="20%">
+
+          <center>
+            <div>
+              <button id="clearBtn">Clear Down Saved JSON</button>
+            </div>
+          </center>
+
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbDocument', 'demo').delete();
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="setDocumentBtn">setDocument</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/setDocument.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbDocument', 'demo')
+                <br />
+                doc.setDocument(json)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="setDocument-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <center>
+            <div>
+              <button id="getDocumentBtn">getDocument</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/getDocument.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbDocument', 'demo')
+                <br />
+                json = doc.setDocument(true)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="getDocument-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+          <div>
+            Drilling down through the saved JSON
+          </div>
+          <center>
+            <div>
+              <button id="drillDownBtn">Fetch</button>
+            </div>
+            <div id="drillDownReset">
+              <div>
+                <button id="drillDownResetBtn">Reset</button><br />
+              </div>
+              <div>
+                New Value: <input id="newValue" type="text">
+              </div>
+              <div>
+                <button id="newValueBtn">Set a New Value</button>
+              </div>
+            </div>
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/getDocument.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                <div id="drillDownRef">
+                  doc = this.documentStore.use('jsdbDocument')
+                </div>
+                json = doc.<span id="subscript_list"></span><span id="method-property"></span>
+              </td>
+            </tr>
+            <tr>
+              <td width="25%">exists:</td>
+              <td>
+                <pre id="drillDown-exists"></pre>
+              </td>
+            </tr>
+            <tr>
+              <td width="25%">hasValue:</td>
+              <td>
+                <pre id="drillDown-hasValue"></pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">hasChildren:</td>
+              <td>
+                <pre id="drillDown-hasChildren"></pre>
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="drillDown-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+           <div>
+             Property path (dot delimited): <input id="deleteSubTree-path" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="deleteSubTreeBtn">Delete a Section</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/delete.js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbDocument', 'demo')
+                <br />
+                doc.$(['contact', 0, 'relationship']).delete()
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="deleteSubTree-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td width="20%">
+           <div>
+             Additional JSON: <textarea id="insertSubTree-json"></textarea>
+          </div>
+           <div>
+             Insertion path (dot delimited): <input id="insertSubTree-path" type="text">
+          </div>
+          <center>
+            <div>
+              <button id="insertSubTreeBtn">Add a Section</button>
+            </div>
+            <br />
+            <div>
+              <a href="https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/setDocument().js" target="newWindow">
+               API Source Code
+              </href>
+            </div>
+          </center>
+        </td>
+        <td width="80%">
+          <table class="jsdb-table" width="100%">
+            <tr>
+              <td width="25%">JSdb Commands:</td>
+              <td>
+                doc = this.documentStore.use('jsdbDocument', 'demo')
+                <br />
+                doc.$(['contact', 0, 'relationship']).setDocument(json)
+              </td>
+            </tr> 
+            <tr>
+              <td width="25%">JSdb Response:</td>
+              <td>
+                <pre id="insertSubTree-response"></pre>
+              </td>
+            </tr> 
+          </table>
+        </td>
+      </tr>
+
+    </table>
+  </body>
+</html>
