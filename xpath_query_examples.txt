@@ -1,0 +1,55 @@
+/child::doc                                ;;Get the root node
+/doc                                       ;;Abbreviated syntax for getting the root node
+/child::doc/child::foo                     ;;Get all <foo> elements that are children of the <doc> root node
+/doc/foo                                   ;;Abbreviated syntax for getting all <foo> elements that are children of the <doc> root node
+//foo                                      ;;Get all <foo> nodes
+/doc/foo/bar                               ;;Get all <bar> nodes that are children of <foo> nodes, and grandchildren of the <doc> nodes
+/doc/foo/*                                 ;;Get all nodes that are children of <foo> nodes and grandchildren of the <doc> node
+/doc/aaa/descendant::*                     ;;Get all descendants of <aaa> nodes that are children of the <doc> node
+//foo/descendant::*                        ;;Get all descendants of all <foo> nodes
+//aaa/descendant::bar                      ;;Get all <bar> nodes that have <aaa> as an ancestor
+//bar/parent::*                            ;;Get parents of all <bar> nodes
+/doc/foo/bar/ancestor::*                   ;;Get all elements in the path, excluding <bar> nodes
+/doc/foo/bar/*/ancestor::*                 ;;Get all elements in the path, including <bar> nodes
+//bar/ancestor::*                          ;;Get all ancestors of <bar> nodes
+/doc/foo[1]/following-sibling::*           ;;All following siblings of the first <foo> node
+//bar[2]/following-sibling::*              ;;All following siblings of the second <bar> node
+/doc/aaa/preceeding-sibling::*             ;;All siblings preceeding the <aaa> tag
+//*                                        ;;Return all nodes (apart from attribute nodes)
+//node()                                   ;;Also returns all nodes (apart from attribute nodes)
+/descendant::*                             ;;Select all descendants of the root node, so select all nodes
+//bar                                      ;;Get all <bar> nodes
+//foo/bar                                  ;;Get <bar> nodes that are children of all <foo> nodes
+/*/*/*/bar                                 ;;Get all <bar> nodes that have 3 ancestors
+//bar/attribute::name                      ;;Get "name=" attributes for all <bar> nodes
+//bar/attribute::node()                    ;;Get all attributes for all <bar> nodes
+//attribute::name                          ;;Get all "name=" attributes
+//@name                                    ;;Abbreviated syntax for getting all "name=" attributes
+//bar[@name]                               ;;Get all <bar> nodes that have a "name=" attribute
+//bar[@closed]                             ;;Get all <bar> nodes that have a "closed=" attribute
+//bar[@*]                                  ;;Get all <bar> nodes that have attributes
+//foo[not(@*)]                             ;;Get all <foo> nodes that don't have attributes
+//bar[@name="Grogan's"]                    ;;Get all <bar> nodes with a name="Grogan's" attribute
+//bar[./@name="Grogan's"]                  ;;Synonymous with the above: Get all <bar> nodes with a name="Grogan's" attribute
+/doc/foo/bar[.='pub 5']                    ;;Get all <bar> nodes that are children of <foo> nodes and grandparents of the <doc> node, with a text value of "pub 5"
+/doc/foo[./bar='pub 5']                    ;;Get all <foo> nodes that are children of the <doc> node and have a <bar> child node with a text value of "pub 5"
+//bar[3]                                   ;;Get the third <bar> node from the complete set of all <bar> nodes
+//foo/bar[2]                               ;;Get the second <bar> node from those that are children of all <foo> nodes
+//bar[last()]                              ;;Get the last <bar> node from the set of all <bar> nodes
+//foo[2]/bar[3]                            ;;Get the third <bar> node from those that are children of the second <foo> node
+//foo[1]/bar[last()]                       ;;Get the last <bar> node from those that are children of the first  <foo> node
+//bar[parent::*/@location = 'Drumcondra']                      ;;Get all <bar> nodes whose parent has a location attribute of "Drumcondra"
+//bar[position()>3][2]                                         ;;First get the fourth and higher <bar> nodes, then select the second from that set (ie get the 5th one)
+//bar[contains(@name,'ogan')][parent::*/@location = 'Town']    ;;Get the <bar> nodes that have a "name=" attribute that contains "ogan", and whose parent node has a "location=" attribute of "Town"
+//bar[contains(@name,'ogan') & (parent::*/@location = 'Town')] ;;Synonymous with the previous query
+//bar[2][parent::*/@location = 'Drumcondra']                   ;;Get the second <bar> tag, and only include it if its parent's "location=" attribute is "Drumcondra"
+//bar[starts-with(@owner,'Jo')]                                ;;Get all <bar> nodes whose "owner=" attribute starts with "Jo"
+//bar[starts-with(@owner,'J')]             ;;Get all <bar> nodes whose "owner=" attribute starts with "J"
+//bar[starts-with(.,'pub')                 ;;Get all <bar> nodes whose text value starts with "pub"
+//bar[contains(@name,'ogan')]              ;;Get all <bar> nodes whose "name=" attribute contains "ogan"
+//bar[contains(@name,'ogan')][2]           ;;Get the second <bar> node whose "name=" attribute contains "ogan"
+//bar[2][contains(@name,'ogan')]           ;;Get the second <bar> tag, and only include it if its "name=" attribute contains "ogan"
+//bar[2][contains(@name,'agan')]           ;;Get the second <bar> tag, and only include it if its "name=" attribute contains "agan"
+
+"//bar[2][contains(@name,'ogan')]          ;;This query has an erroneous quote at the start, so returns no nodes
+//bar[./[@name]                            ;;This query has an extra [ so returns no nodes

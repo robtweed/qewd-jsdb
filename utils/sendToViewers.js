@@ -2,15 +2,17 @@ var fs = require('fs-extra');
 
 module.exports = function(global, subscripts) {
 
-  console.log('sendToViewers');
-
   var ref = '^' + global + '(';
   var comma = '';
-  subscripts.forEach(function(subscript) {
-    ref = ref + comma + '"' + subscript + '"';
-    comma = ',';
-  });
-  ref = ref + ',*)';
+  subscripts = subscripts || [];
+  if (subscripts.length > 0) {
+    subscripts.forEach(function(subscript) {
+      ref = ref + comma + '"' + subscript + '"';
+      comma = ',';
+    });
+    ref = ref + ',';
+  }
+  ref = ref + '*)';
   var jsdbDocRef = "doc = this.documentStore.use('" + global + "')";
   var jsdbCommand = 'doc';
   if (subscripts && subscripts.length > 0) {

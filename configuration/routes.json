@@ -130,6 +130,11 @@
     "handler": "list_ltrim"
   },
   {
+    "uri": "/jsdb/viewer/refresh",
+    "method": "GET",
+    "handler": "qewd_refresh_viewer"
+  },
+  {
     "uri": "/jsdb/shutdown",
     "method": "POST",
     "handler": "qewd_shutdown"
