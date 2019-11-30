@@ -571,6 +571,35 @@ I could now do the same thing using this notation:
 demonstrating how much the distinction between in-memory and on-disk JavaScript Objects is now
 blurred in QEWD-JSdb!
 
+QEWD-JSdb also demonstrates something else.  Consider a Document Database such as MongoDB which is
+designed for the storage of JSON documents.  In MongoDB, the "unit of storage" is an entire
+document.  To manipulate or access its contents, you must first fetch the document from the database into
+an in-memory JavaScript object before working on it.  If you modify any of its contents, you save back
+the modified object to the database.
+
+Now compare with what you've just been doing with QEWD-JSdb.  Sure, just like MongoDB you can save an
+in-memory object to disk and retrieve a JSON object from the database as an in-memory instance.  But
+your "unit of storage" is now right down to an individual name/value pair, anywhere in the JSON document!
+You can view that name/value pair's value *in situ* directly from the database using its Document Node's *value* property.
+You can also modify that name/value pair's value *in situ*, directly into the database.
+
+Furthermore, you can work with sub-sets of the JSON, retrieving sub-sections of the hierarchy.  You can
+also insert new sub-sections of JSON into the saved document.  And of course you can delete whole
+sections of the stored JSON using the *delete()* method.
+
+We've previously seen the *delete()* method applied to a leaf node.  However, if applied to 
+an intermediate node, the entire sub-tree of Global Nodes that are descendents of the Node are
+deleted too.
+
+Indeed, apply the *delete()* method to the top-level Document Node (ie representing the Global Node alone, 
+without any subscripts), and the entire document disappears from the database.
+
+So, in summary, QEWD-JSdb provides you with the basis of a uniquely powerful and flexible persistent 
+JavaScript Object / JSON document database, quite different from anything else you've probably used before!
+
+
+
+
 
 
 
