@@ -142,13 +142,26 @@ Use the following URL in your browser:
         (Change the IP Address / Domain name to that of your server)
 
 This is a simple QEWD WebSocket application that will display, in real-time,
- any changes made by the explorer applications
+ any changes made by the explorer applications or during REPL-based exploration of
+ QEWD-JSdb.
 
+
+# The REPL-based Explorer
+
+I'd recommend that you start by exploring QEWD-JSdb using the Node.js REPL.  
+You can use the viewer application (see above)
+to see, in real-time, the effect on the database of your QEWD-JSdb interactions.  See 
+[here for detailed instructions](./REPL.md) on using this REPL explorer mode.  It really
+is the best way to begin to understand QEWD-JSdb.
 
 
 # The Explorer Applications
 
-There's a QEWD application/page for each of the supported QEWD-JSdb models.  Start them as follows:
+
+There's also a QEWD application/page for each of the supported QEWD-JSdb models.  Each application
+showcases/demonstrates the capabilities specific to the particular database model.
+
+Start them as follows:
 
 - Document Database / Persistent JavaScript Objects
 
