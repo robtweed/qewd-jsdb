@@ -1,4 +1,4 @@
-# qewd-jsdb: In-process multi-model JavaScript Database
+# qewd-jsdb: Showcase for In-process multi-model JavaScript Database
  
 Rob Tweed <rtweed@mgateway.com>  
 29 November 2019, M/Gateway Developments Ltd [http://www.mgateway.com](http://www.mgateway.com)  
