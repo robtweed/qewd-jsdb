@@ -124,7 +124,7 @@ providing some background information.
 ## Global Storage in a Nut-shell
 
 Global Storage uses a hierarchical database structure.  The "unit of storage" is known as a 
-*Global* to which you assign a name - an alphanumeric value that must star with a letter.  You can
+*Global* to which you assign a name - an alphanumeric value that must start with a letter.  You can
 have as many differently named Globals as you want in the database, and it's up to you what you name them.
 
 The data in each global is stored in what's known as a *Global Node*, which is defined by:
@@ -156,13 +156,13 @@ A key piece is those subscripts, which can be used to define a hierarchical tree
 or complexity you like.
 
 Global Storage comes with little else built-in.  There's no automatic indexing, for example.  However, both
-YottaDB and IRIS support record locking and transactions.  However, that's beyond the scope of what
+YottaDB and IRIS support record locking and transactions.  That's beyond the scope of what
 this showcase / demo / exploration will get into.  For advanced, business-critical applications, just be
 aware that they are supported if you need them in future.
 
 If it seems like this is an incredibly basic, low-level database management system, 
 that's exactly what it is!  But in that deceptive simplicity lies an incredibly flexible and
-powerful database. Its
+powerful database for you to harness. Its
 power comes from being able to implement all manner of database model abstractions on top of 
 that basic hiearchical structure, and
 QEWD-JSdb allows those abstractions to be implemented in JavaScript itself.  It's like a "proto-database"
@@ -174,7 +174,7 @@ simply scratch the surface of what's possible.  If you spend some time familiari
 QEWD-JSdb and the underlying Global Storage, you'll be rewarded with a new world of possibilities!
 
 All that might sound like a lot of hype at this stage, and is probably difficult to 
-appreciate on the single record we've managed to create thus far, so let's
+appreciate on the basis of the single record we've managed to create thus far, so let's
 proceed with some further exploration.
 
 ## What's that Right-Hand Panel in the Viewer Application All About?
@@ -375,7 +375,12 @@ Now you'll see this was created in the database:
 
         ^demo("y","z","child1")="hello world"
 
-We could create another child:
+Of course, we could have achieved exactly the same thing using the absolute reference approach:
+
+        var child1 = jsdb.use('demo', 'y', 'z', 'child1')
+
+Which you use is up to you, but the relative technique using $() is very convenient, particularly
+if you're repetitively creating child Nodes of a parent Node. So, for example, we can now create another child:
 
         var child2 = doc2.$('child2')
         child2.value = "another world"
@@ -384,6 +389,8 @@ and let's create one more:
 
         var child3 = doc2.$('child3')
         child3.value = "last world"
+
+Hopefully what's been appearing in the *viewer* as you've been doing this is beginning to make sense!
 
 
 # Exploring the Properties of Document Nodes
