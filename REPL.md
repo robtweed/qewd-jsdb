@@ -598,28 +598,287 @@ So, in summary, QEWD-JSdb provides you with the basis of a uniquely powerful and
 JavaScript Object / JSON document database, quite different from anything else you've probably used before!
 
 
+# Traversing a QEWD-JSdb Document
+
+A key part of the power of Global Storage is the ability to highly-efficiently traverse your way around
+the hierarchical structure.  This ability is provided to you in QEWD-JSdb through two methods available
+to a Document Node Object:
+
+- forEachChild(): iterates through the Document Node's child Nodes
+- forEachLeafNode(): iterates through the Document Node's descendent leaf nodes.
+
+Let's take a look at both in action.
+
+## forEachChild()
+
+This is the most frequently used method of the two, and once again its apparent simplicitly is highly deceptive.
+
+ Cooy and paste the following into your REPL and hit the Enter key:
+
+        jsonNode.$('hello').forEachChild(function(name, node) {
+          console.log(name)
+        });
+
+You should see the result:
+
+        there
+        world
+        you
+
+which are the property names (aka Global subscript values) of each of the child nodes of the jsonNode.$('hello') node
+
+Of course, you can probably guess that we could have written the same logic like this instead:
+
+        jsonNode.$hello.forEachChild(function(name, node) {
+          console.log(name)
+        });
+
+since we've already previously accessed the *hello* subscript via the *$()* method.
+
+So how and why did we get this result?
+
+Remember, *jsonDemo* represented this physical Global Node:
+
+        ^demo("json")
+
+and *jsonDemo.$('hello') therefore represents:
+
+        ^demo("json","hello")
+
+and so what happened was that the *forEachChild()* function iterated through its child subscripts:
+
+        ^demo("json","hello","there")  <== name = 'there'
+        ^demo("json","hello","world")  <== name = 'world'
+        ^demo("json","hello","you")    <== name = 'you'
+
+So, that's how to iterate through a Document Node's child node property names, but what if we want the values of those child nodes, or if
+we want to perform some manipulation on some or all of the child Document Nodes?
+
+That's where the second argument of the *forEachChild()* method comes in.  It provides you with the Document Node
+Object for the child node at each iteration.  So try cuttiing and pasting this variation on the code:
+
+        jsonNode.$hello.forEachChild(function(name, node) {
+          console.log(name, ': ' + node.value)
+        });
+
+and this time it returns:
+
+        there : xyz
+        world : 123
+        you : abc123
 
 
+The *forEachChild()* method can be nested.  We could iterate through the first 3 levels of our document's hiearchy.
+If you remember we had earlier instantiated *topDoc* as a Document Node object that represented the top-leve of our
+persistent document named *demo*.  So try cutting and pasting the following:
 
 
+        topDoc.forEachChild(function(name, lvl1Node) {
+          if (lvl1Node.hasValue) {
+            console.log('level 1: ' + name + ': ' + lvl1Node.value)
+          }
+          else {
+            lvl1Node.forEachChild(function(name, lvl2Node) {   
+              if (lvl2Node.hasValue) {
+                console.log('  level 2: ' + name + ': ' + lvl2Node.value)
+              }
+              else {
+                lvl2Node.forEachChild(function(name, lvl3Node) {
+                  if (lvl3Node.hasValue) {
+                    console.log('    level 3: ' + name + ': ' + lvl3Node.value)
+                  }
+                });
+              }
+            });
+          }
+        });
 
 
+So this time you should see:
+
+            level 3: there: xyz
+            level 3: world: 123
+            level 3: you: abc123
+        level 1: x: abcdef
+            level 3: child1: hello world
+            level 3: child2: another world
+            level 3: child3: last world
+
+and if you compare with the Global Storage view in the *viewer* application, you can see that we've iterated through the entire
+Global:
+
+        ^demo("json","hello","there")="xyz"
+        ^demo("json","hello","world")=123
+        ^demo("json","hello","you")="abc123"
+        ^demo("x")="abcdef"
+        ^demo("y","z","child1")="hello world"
+        ^demo("y","z","child2")="another world"
+        ^demo("y","z","child3")="last world"
 
 
+### forEachChild() Modifiers
+
+You can control and modify the behaviour of the *forEachChild()* method via an optional first argument.
+
+#### Traversal Direction
+
+You can control the direction of the traversal.  By default the direction is *forwards*, but you can change it to 
+"reverse", eg:
 
 
+        jsonNode.$hello.forEachChild({direction: 'reverse'}, function(name, node) {
+          console.log(name)
+        });
+
+and this time you'll see the child property names returned in reverse order:
 
 
+        you
+        world
+        there
 
 
+#### Ranges
+
+You can specify a range of child property names within which to limit the traversal.  To demonstrate this properly, let's
+first add the following data to the *demo* document:
+
+        var data = {
+          "james": "",
+          "frederick": "",
+          "william": "",
+          "alan": "",
+          "andrew": "",
+          "anthony": "",
+          "brian": "",
+          "brendan": "",
+          "billy": "",
+          "charles": "",
+          "colin": ""
+        }
+        topDoc.$('names').setDocument(data)
+
+Take a look at the *viewer* page - notice how the names are displaying in alphabetic order,even though we defined them
+in a somewhat jumbled fashion.  This is something that the Global Storage database does automatically - basically
+subscripts are always automatically ordered in alphanumeric collating sequence.  Let's try adding a couple more names to
+see that happening:
+
+        topDoc.$names.$('david').value = ''
+
+        topDoc.$names.$('richard').value = ''
+
+So what happens if we add a name starting with an upper-case letter?  Let's try it out:
+
+        topDoc.$names.$('Graham').value = ''
+
+That's interesting - that's been put at the top of the list.  Why?  Because upper-case letters precede lower case ones
+in the ASCII collating sequence.  You need to be aware of this when using Global storage for indexing - a topic we'll
+explore in more detail later.
+
+However, for now we have some good data with which to demonstrate *forEachChild()* ranges.
+
+We can specify a starting point for the range in which to iterate:
+
+        topDoc.$names.forEachChild({range: {from: 'd'}}, function(name, node) {
+          console.log(name)
+        });
+
+and you should get back:
+
+        david
+        frederick
+        james
+        richard
+        william
 
 
+We can alternatively specify an endpoint to the range:
 
 
+        topDoc.$names.forEachChild({range: {to: 'd'}}, function(name, node) {
+          console.log(name)
+        });
+
+and now you should see:
+
+        Graham
+        alan
+        andrew
+        anthony
+        billy
+        brendan
+        brian
+        charles
+        colin
+        david
+
+Naturally they can be combined.  Try this:
 
 
+        topDoc.$names.forEachChild({range: {from: 'b', to: 'd'}}, function(name, node) {
+          console.log(name)
+        });
+
+You should now just get these names back:
+
+        billy
+        brendan
+        brian
+        charles
+        colin
+        david
+
+You're not restricted to a single letter for the *from* and *to* values.  Try this:
+
+        topDoc.$names.forEachChild({range: {from: 'br', to: 'col'}}, function(name, node) {
+          console.log(name)
+        });
+
+Now we just see:
 
 
+      brendan
+      brian
+      charles
+      colin
+
+If a *from* or *to* value isn't present in the actual subscripts, that doesn't matter - they are just seed/terminating
+values, so this:
+
+        topDoc.$names.forEachChild({range: {from: 'elvis', to: 'kelly'}}, function(name, node) {
+          console.log(name)
+        });
+
+will return
+
+        frederick
+        james
+
+
+The *from* and *to* values can be the same, in which case all subscript names starting with the specified values are
+returned, eg:
+
+        topDoc.$names.forEachChild({range: {from: 'br', to: 'br'}}, function(name, node) {
+          console.log(name)
+        });
+
+
+will return
+
+        brendan
+        brian
+
+
+Note that ranges can be specified together with direction:
+
+        topDoc.$names.forEachChild({direction: 'reverse', range: {from: 'br', to: 'br'}}, function(name, node) {
+          console.log(name)
+        });
+
+which now returns
+
+        brian
+        brendan
 
 
 
