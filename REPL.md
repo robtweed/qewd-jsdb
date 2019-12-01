@@ -855,6 +855,9 @@ will return
         james
 
 
+#### Prefixes
+
+
 The *from* and *to* values can be the same, in which case all subscript names starting with the specified values are
 returned, eg:
 
@@ -880,8 +883,319 @@ which now returns
         brian
         brendan
 
+However, there's a simpler modifier, *prefix* available to achieve the same effect much more succinctly.  Try this:
+
+        topDoc.$names.forEachChild({prefix: 'br'}, function(name, node) {
+          console.log(name)
+        });
+
+and of course it can be combined with the *direction* modifier:
+
+        topDoc.$names.forEachChild({direction: 'reverse', prefix: 'br'}, function(name, node) {
+          console.log(name)
+        });
 
 
+So that's the *forEachChild()* method, which is available for all Document Nodes. Hopefully you can begin to appreciate 
+and understand how and why it is a core part of developing with QEWD-JSdb.
+
+
+## forEachLeafNode()
+
+The *forEachLeafNode()* method is a somewhat less used method, but in certain circumstances it is extremely useful and
+can be a lot more efficient than *forEachChild*.
+
+A good use-case is exemplified by reviewing something we did earlier:
+
+        topDoc.forEachChild(function(name, lvl1Node) {
+          if (lvl1Node.hasValue) {
+            console.log('level 1: ' + name + ': ' + lvl1Node.value)
+          }
+          else {
+            lvl1Node.forEachChild(function(name, lvl2Node) {   
+              if (lvl2Node.hasValue) {
+                console.log('  level 2: ' + name + ': ' + lvl2Node.value)
+              }
+              else {
+                lvl2Node.forEachChild(function(name, lvl3Node) {
+                  if (lvl3Node.hasValue) {
+                    console.log('    level 3: ' + name + ': ' + lvl3Node.value)
+                  }
+                });
+              }
+            });
+          }
+        });
+
+If, what we were intending to achieve with this logic was to locate all the leaf node values in the document, then it
+had a couple of key disadvantages:
+
+- we had to know, in advance, that the hierarchy was no more than 3 levels deep.  So this logic isn't generic enough
+to keep track of changes within the document that might introduce an unknown number of additional levels of hierarchy.
+
+- we had to "walk" the entire list of subscripts at each level to get to the leaf nodes.  With the data that existed
+at the time we originally ran it, ie:
+
+        ^demo("json","hello","there")="xyz"
+        ^demo("json","hello","world")=123
+        ^demo("json","hello","you")="abc123"
+        ^demo("x")="abcdef"
+        ^demo("y","z","child1")="hello world"
+        ^demo("y","z","child2")="another world"
+        ^demo("y","z","child3")="last world"
+
+That involved: 
+
+- 3 iterations through level 1
+- 2 iterations through level 2
+- 6 iterations through level 3
+
+So a total of 11 iteration steps to locate 7 leaf nodes.
+
+In a big hierarchy with lots of intermediate levels and leaf nodes, this approach could be very wasteful, if all we
+want to get to is the leaf nodes.
+
+So here's how we could rewrite that same logic to address those two deficiencies of nested *forEachChild()* methods:
+
+        topDoc.forEachLeafNode(function(value, node) {
+          console.log(node.path + ': ' + value);
+        });
+
+This now returns:
+
+        json,hello,there: xyz
+        json,hello,world: 123
+        json,hello,you: abc123
+        names,Graham:
+        names,alan:
+        names,andrew:
+        names,anthony:
+        names,billy:
+        names,brendan:
+        names,brian:
+        names,charles:
+        names,colin:
+        names,david:
+        names,frederick:
+        names,james:
+        names,richard:
+        names,william:
+        x: 123
+        y,z,child1: hello world
+        y,z,child2: another world
+        y,z,child3: last world
+
+
+As you can see, the argument for the *forEachLeafNode()* method is a callback function which provides twi arguments at
+each iteration:
+
+- value: the value of the leaf node
+- node: a Document Node object representing the leaf node
+
+The *forEachLeafNode()* method returns all the leaf nodes that are descendents of the Document Node Object to which it
+is being applied, so we can limit the iterations to just part of the hierarchy, eg try this:
+
+
+        topDoc.$('y').forEachLeafNode(function(value, node) {
+          console.log(node.path + ': ' + value);
+        });
+
+
+Now, you just see this, the leaf nodes below the *y* Document Node:
+
+        y,z,child1: hello world
+        y,z,child2: another world
+        y,z,child3: last world
+
+
+Now remember, in all of the examples you've seen so far, everything you're seeing is being applied to data on
+disk, in the database, not to in-memory JavaScript objects!
+
+
+
+# Handling JavaScript Arrays in Global Storage
+
+The very simple rules of how Global Storage works that we described at the beginning of this document do not
+explicitly accommodate arrays.  Instead we, ourselves, need to create and apply a convention through which they can be
+accommodated.  The convention applied by QEWD-JSdb is to represent the elements of an array using integer values for
+subscripts: the values match the JavaScript array element index value.
+
+It's pretty simple once you see in action.  Try this:
+
+        var arr = ["element 1", "element 2", "element 3", "element 4", "element 5"]
+        topDoc.$('array').setDocument(arr)
+
+Take a look in the *viewer* application and you'll see how it's stored the array:
+
+        ^demo("array",0)="element 1"
+        ^demo("array",1)="element 2"
+        ^demo("array",2)="element 3"
+        ^demo("array",3)="element 4"
+        ^demo("array",4)="element 5"
+
+
+and its JSON view in the right hand panel is retrieving it correctly as an array:
+
+        {
+          "array": [
+            "element 1",
+            "element 2",
+            "element 3",
+            "element 4",
+            "element 5"
+          ],
+
+Now try this:
+
+        var arrCopy = topDoc.$array.getDocument()
+        console.log(JSON.stringify(arrCopy, null, 2))
+
+This is a surprise!  It's returned it as an object:
+
+        {
+          "0": "element 1",
+          "1": "element 2",
+          "2": "element 3",
+          "3": "element 4",
+          "4": "element 5"
+        }
+
+
+Actually if you think about it, it's not so much of a surprise, because we're applying an implicit abstraction for arrays,
+and it results in a potential ambiguity: how can QEWD-JSdb distinguish between an array and a numerically-keyed object?
+
+As you can see from the *getDocument()* method, by default it can't cater for the ambiguity and falls back on the 
+assumption that everything in Global storage is an object.
+
+However, now try this:
+
+        var arrCopy2 = topDoc.$array.getDocument(true)
+        console.log(JSON.stringify(arrCopy2, null, 2))
+
+This time it successfully returns the array!
+
+        [
+          "element 1",
+          "element 2",
+          "element 3",
+          "element 4",
+          "element 5"
+        ]
+
+The optional first argument of the *getDocument()* method, if set to *true*, tells the method to scan each level of
+subscripting.  If it sees only a consecutive, unbroken sequence of integers, starting with 0, then it assumes the
+data represents an array.  If not, it must be an object at this level in the hierarchy.
+
+The rule is applied at all levels in its traversal through a document.  Try applying this to the document:
+
+        var obj = {abc: 'xyz', arr: [1,2,3, {x: "zxc", z: [5,6,7]}, 8], q: "ggg"}
+        topDoc.$array.$(5).setDocument(obj)
+
+You'll see that this mixture of arrays and objects has been added as a new last element of our original array,
+and is saved in Global Storage thus:
+
+        ^demo("array",5,"abc")="xyz"
+        ^demo("array",5,"arr",0)=1
+        ^demo("array",5,"arr",1)=2
+        ^demo("array",5,"arr",2)=3
+        ^demo("array",5,"arr",3,"x")="zxc"
+        ^demo("array",5,"arr",3,"z",0)=5
+        ^demo("array",5,"arr",3,"z",1)=6
+        ^demo("array",5,"arr",3,"z",2)=7
+        ^demo("array",5,"arr",4)=8
+        ^demo("array",5,"q")="ggg"
+
+
+Try retrieving it the new expanded array:
+
+        var arrCopy2 = topDoc.$array.getDocument(true)
+        console.log(JSON.stringify(arrCopy2, null, 2))
+
+
+and back it comes as expected:
+
+        [
+          "element 1",
+          "element 2",
+          "element 3",
+          "element 4",
+          "element 5",
+          {
+            "abc": "xyz",
+            "arr": [
+              1,
+              2,
+              3,
+              {
+                "x": "zxc",
+                "z": [
+                  5,
+                  6,
+                  7
+                ]
+              },
+              8
+            ],
+            "q": "ggg"
+          }
+        ]
+
+
+There is a cautionary note that is worth bringing to your attention.  Applying this implicit abstraction for
+arrays comes at a cost.  The cost won't be significant for most small to medium-sized saved QEWD-JSdb objects.
+However it will increase in significance as your saved documents get larger.  There are actually two
+implications of using the *true* argument to ensure that you get arrays properly returned:
+
+- to do so, the *getDocument()* logic has to use nested *forEachChild()* methods to exhaustively walk the entire tree
+via its subscripts;
+- at each iteration of the *forEachChild()* methods, at each level of nesting, the logic has to spend time
+inspecting the subscript values to see whether they start at zero and continue as an unbroken sequence of 
+consecutive integers.  This gets costly if there are lots of huge arrays containing lots of members.
+
+By comparison, if you don't add the *true* argument, *getDocument()* uses the more efficient *forEachLeafNode()* method 
+to walk the hierarchy, and applies no subscript inspection.
+
+You can see the [*getDocument()*](https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/getDocument.js) 
+implementation logic here, if you're interested to see how it actually works.
+
+
+Just one further way to demonstrate how this array abstraction is applied.  Let's deliberately break the consecutive
+sequence of integer subscript values in our original array by doing this:
+
+
+        topDoc.$array.$('no_longer_an_array').value = 'This should change things!'
+
+In the *viewer's* Global Storage view you'll see:
+
+        ^demo("array",0)="element 1"
+        ^demo("array",1)="element 2"
+        ^demo("array",2)="element 3"
+        ^demo("array",3)="element 4"
+        ^demo("array",4)="element 5"
+        ^demo("array",5,"abc")="xyz"
+        ^demo("array",5,"arr",0)=1
+        ^demo("array",5,"arr",1)=2
+        ^demo("array",5,"arr",2)=3
+        ^demo("array",5,"arr",3,"x")="zxc"
+        ^demo("array",5,"arr",3,"z",0)=5
+        ^demo("array",5,"arr",3,"z",1)=6
+        ^demo("array",5,"arr",3,"z",2)=7
+        ^demo("array",5,"arr",4)=8
+        ^demo("array",5,"q")="ggg"
+        ^demo("array","no_longer_an_array")="This should change things!"
+
+That second subscript is no longer an unbroken sequence of integers, so even if we use the *true* argument,
+*setDocument()* will now return it as an object.  Try it for yourself:
+
+
+        var arrCopy3 = topDoc.$array.getDocument(true)
+        console.log(JSON.stringify(arrCopy3, null, 2))
+
+
+
+# Creating and using Indices in QEWD-JSdb
+
+To follow.. watch this space!
 
 
 
