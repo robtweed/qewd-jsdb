@@ -1360,17 +1360,25 @@ Look in the *viewer* and you'll see that this has resulted in these records bein
 Notice the first cool thing: that built-in automated subscript collation of the Global Storage database 
 has sorted the index in alphabetic order for us!  This is extremely useful for indices, as you'll see.
 
-Let's explain how and why these index records are defined:  against each lower-cased last name are all the record id numbers
-for the corresponding data records containing those last names.
+So how and why these have we defined these index records in this way?  The idea is
+that against each lower-cased instance of *lastName*, we define the record id numbers
+for the corresponding data records containing those last names.  Notice that in an index record, 
+as you'll soon see, it's the property value (eg *tweed*) that is important, and not the index node's data value. So
+we'll just assign an empty string value to each index record.
 
-So now we can manually perform our search for all the telephone numbers of people with a last name of *tweed*:
+We can now manually perform our search for all the telephone numbers of people with a last name of *tweed*.
+Try this out:
 
         indexDoc.$('tweed').forEachChild(function(id) {
           console.log(telDoc.$([id, 'tel']).value)
         });
 
-You can hopefully see how simple the task has become: use the *forEachChild()* method to get all the matching record ids,
-and, at each iteration, use this id to point to the data record (telDoc.$('id')), and then get the value for its *tel* property.
+And hey presto! Back should come the telephone numbers for the two *tweed* records.
+
+You can hopefully see how simple the task has been made with QEWD-JSdb: simply use 
+the *forEachChild()* method to get all the matching record ids,
+and, at each iteration, use this id to point to the data record (telDoc.$('id')), 
+and finally get the value for its *tel* property.
 
 Remember that we can use the *range* or *prefix* modifiers to make the query more generic, eg:
 
