@@ -167,21 +167,21 @@ Start them as follows:
 
         http://xx.xx.xx.xx:8080/document
 
-- Redis-Like Key/Value Store
+- [Redis-Like Key/Value Store](./KVS.md)
 
         http://xx.xx.xx.xx:8080/kvs
 
 
-- Redis-like Lists
+- [Redis-like Lists](./LISTS.md)
 
         http://xx.xx.xx.xx:8080/lists
 
 
-- Relational Database
+- [Relational Database](./RDB.md)
 
         http://xx.xx.xx.xx:8080/rdb
 
-- Persistent XML DOM
+- [Persistent XML DOM](./DOM.md)
 
         http://xx.xx.xx.xx:8080/dom
 

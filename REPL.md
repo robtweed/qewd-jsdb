@@ -1649,7 +1649,7 @@ and the index records have been appropriately changed too:
 
 
 In order to edit that record, we had to know that its *id* was 2.  This isn't something
-we'd usually have known, so how would we have found that out.
+we'd usually have known, so how would we have found that out?
 
 A simple solution is provided by the *saveAndIndex* function adding the *id* to the data
 record, eg:
