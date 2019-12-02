@@ -98,7 +98,7 @@ Find the [RDB API interface code here](https://github.com/robtweed/ewd-document-
 if you're interested in seeing the Global Storage-side *routines* source code and
 detailed documentation for their use, [click here](https://github.com/chrisemunt/mgsql).
 
-## Enabling Use of the RDB APIs
+# Enabling Use of the RDB APIs
 
 The *RDB* APIs work a little differently from the other database model APIs.
 
@@ -149,7 +149,7 @@ or when using the *jsdb_shell* REPL module:
         resultSet =  jsdb.sql('select * from jsdbdemo')
 
 
-## Usage Notes on the RDB Explorer Application
+# Usage Notes on the RDB Explorer Application
 
 In the top row of the table you'll see the first of a set of pre-created record objects which will
 be used to populate a *Relational Database Table (RDB)*.  Each time you add a record to the *RDB* table using the
@@ -159,13 +159,13 @@ You can click the button in the second table row at any time to clear down the *
 the first table row will return to displaying the first of its pre-created records.
 
 
-# Creating an RDB Table
+## Creating an RDB Table
 
 An *RDB* Table is created using the *create table* SQL command.  See the RDB Explorer table row 3.
 
 Clicking this button will invoked a pre-built *create table* command as shown in the right-hand column.
 
-# Adding an Index for the Table
+## Adding an Index for the Table
 
 To optimise the search path used by the SQL engine's query optimiser, you should define indices for the
 most common/most likely SQL queries (otherwise the SQL engine will do an exhaustive search through the
@@ -178,7 +178,7 @@ Enter a name for the index, eg *byName*
 Then in the second text box, enter the fieldnames to be idexed.  For example, if we wanted an index
 by lastName, we would enter: 
 
-    *lastName, id*
+    lastName, id
 
 *id* should always be in the list of fields, and usually the last in the list.
 
@@ -186,7 +186,7 @@ Clicking the *Create Index* button will activate the index, but you won't see an
 application.
 
 
-# Inserting Records into a Table
+## Inserting Records into a Table
 
 Records are added, or inserted, into an *RDB* table using the *insert into* SQL command.  See
 table row 5.
@@ -202,11 +202,11 @@ added any indices, you should also see the index records in the database, eg:
 Click the *Insert Record* button a few more times to add some more data to the table.
 
 
-# Querying the *RDB* database
+## Querying the *RDB* database
 
 We can now apply SQL queries to the *RDB* database.
 
-## Simple Select All Query
+### Simple Select All Query
 
 Let's start with a simple *select \* from jsdbdemo* query.  See Explorer table row 6.
 
@@ -214,16 +214,16 @@ You should see the returned *resultSet* appear in the right hand Explorer column
 all the records you inserted into the table.
  
 
-## A More Specific Query
+### A More Specific Query
 
-In the Explorer table's row 7 (Custom Select) you can try a more specific query.
+In the Explorer table's row 7 (*Custom Select*) you can try a more specific query.
 
 In the *select* text entry box enter the field name or field names you want to retrieve, eg
 enter *firstName, lastName*.  Separate the field names with a comma.  Whitespace around the commas is OK.
 
 In the *where* text entry box, enter an SQL *where predicate*, eg try:
 
-    *city = "Redhill"*
+     city = "Redhill"
 
 Make sure you put a space on either side of the = sign.
 
@@ -231,13 +231,13 @@ Then press the *Custom Select* button and you should see a resultSet appear in t
 of the Explorer.
 
 
-# Deleting Records
+## Deleting Records
 
 You can delete records from your *RDB* table in the Explorer table's row 8.
 
 Fill out the *where* text box in the same way as described above for *Custom Selects*, eg:
 
-   *firstName = "Simon"
+    firstName = "Simon"
 
 Click the *Delete* button, and in the viewer you should see the record disappear, along with any
 associated index record(s).
