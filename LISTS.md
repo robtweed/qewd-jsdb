@@ -58,13 +58,64 @@ This browser-based application allows you to see all of the QEWD-JSdb *Lists* AP
 together with the *viewer* application, see, in real-time, how they make use of the underlying Global Storage
 database.
 
-## Source Code for the Lists APIs
+The Lists application has deliberately been written as a very simple, un-sexy-looking, plain HTML
+and JavaScript/jQuery application.  The reason is to allow developers to be able to quickly discover
+and understand how it works by looking at its source code, without the obfuscation that would result
+from the addition of a JavaScript framework such as Angular, Vue or React.  However, all the logic
+can be applied to and integrated with any front-end JavaScript framework.
 
-Like all the QEWD-JSdb APIs, they are written in JavaScript.  They are all Open Source APIs, and
+## Source Code for the Lists Explorer Application
+
+Click the links below to view the code.
+
+- [browser-side HTML](https://github.com/robtweed/qewd-jsdb/blob/master/www/lists/index.html)
+- [browser-side JavaScript/jQuery](https://github.com/robtweed/qewd-jsdb/blob/master/www/lists/js/app.js)
+- [server-side message handlers](https://github.com/robtweed/qewd-jsdb/tree/master/qewd-apps/jsdb-lists)
+
+The application has been built in accordance to the [QEWD-Up](https://github.com/robtweed/qewd/blob/master/up/docs/InteractiveApps.md)
+ design framework for interactive applications.
+
+## Source Code for the QEWD-JSdb Lists APIs
+
+Like all the QEWD-JSdb APIs, the QEWD-JSDB Lists APIs that are used by the Lists Explorer application
+ are written in JavaScript.  They are all Open Source APIs, and
 you are free to inspect and use the code as you wish, in accordance with the Apache 2 license under
 which they are made available.
 
 Find the [Lists source code here](https://github.com/robtweed/ewd-document-store/tree/master/lib/proto/list).
+
+
+## Usage Notes on the Lists Explorer Application
+
+In the top row of the table you'll see the first of a set of pre-created record objects which will
+be used to populate a *List*.  Each time you push a record into the *List* using either the
+*lpush()* or *rpush()* methods, the next one will appear in the top table row.
+
+You can click the button in the second table row at any time to clear down the *List*.  If you do so, 
+the first table row will return to displaying the first of its pre-created records.
+
+Records are added to the *List* using:
+
+- lpush(): adds the record to the top of the *List*
+- rpush(): adds the record to the end of the *List*
+- insert_before(): inserts the record to the *List* before the specified list sequence position
+
+Record can be popped off the *List* and returned as a JavaScript object using:
+
+- lpop(): removes and returns the record on the top of the *List*
+- rpop(): removes and returns the last record on the *List*
+
+You can view a range of members of the *List* using the *lrange()* method.  It takes two arguments:
+
+- from: integer specifying the start position in the *List* from which you're interested in viewing
+- to: integer specifying the end position in the *List* at which you're interested in viewing
+
+Note that *lrange()* does not remove the items from the *List*.
+
+You can trim the *List* using the *ltrim()* method.  This removes all *List* members apart from those
+initially in the position range you specify.  The arguments are the same as for *lrange()*.
+
+
 
 
 
