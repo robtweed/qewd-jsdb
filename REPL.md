@@ -986,7 +986,7 @@ This now returns:
         y,z,child3: last world
 
 
-As you can see, the argument for the *forEachLeafNode()* method is a callback function which provides twi arguments at
+As you can see, the argument for the *forEachLeafNode()* method is a callback function which provides two arguments at
 each iteration:
 
 - value: the value of the leaf node
@@ -1106,7 +1106,7 @@ and is saved in Global Storage thus:
         ^demo("array",5,"q")="ggg"
 
 
-Try retrieving it the new expanded array:
+Try retrieving the new expanded array:
 
         var arrCopy2 = topDoc.$array.getDocument(true)
         console.log(JSON.stringify(arrCopy2, null, 2))
@@ -1146,17 +1146,17 @@ arrays comes at a cost.  The cost won't be significant for most small to medium-
 However it will increase in significance as your saved documents get larger.  There are actually two
 implications of using the *true* argument to ensure that you get arrays properly returned:
 
-- to do so, the *getDocument()* logic has to use nested *forEachChild()* methods to exhaustively walk the entire tree
+- to do so, the *getDocument()* logic has to recursively call *forEachChild()* methods to exhaustively walk the entire tree
 via its subscripts;
-- at each iteration of the *forEachChild()* methods, at each level of nesting, the logic has to spend time
+- at every iteration of each *forEachChild()* method, at every level of the hierarchy, the logic has to spend time
 inspecting the subscript values to see whether they start at zero and continue as an unbroken sequence of 
 consecutive integers.  This gets costly if there are lots of huge arrays containing lots of members.
 
 By comparison, if you don't add the *true* argument, *getDocument()* uses the more efficient *forEachLeafNode()* method 
 to walk the hierarchy, and applies no subscript inspection.
 
-You can see the [*getDocument()*](https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/getDocument.js) 
-implementation logic here, if you're interested to see how it actually works.
+You can see the [*getDocument()* implementation logic here](https://github.com/robtweed/ewd-document-store/blob/master/lib/proto/getDocument.js) 
+, if you're interested to see how it actually works.
 
 
 Just one further way to demonstrate how this array abstraction is applied.  Let's deliberately break the consecutive
@@ -1185,7 +1185,7 @@ In the *viewer's* Global Storage view you'll see:
         ^demo("array","no_longer_an_array")="This should change things!"
 
 That second subscript is no longer an unbroken sequence of integers, so even if we use the *true* argument,
-*setDocument()* will now return it as an object.  Try it for yourself:
+*setDocument()* will now return it as an object.  Try it for yourself and see:
 
 
         var arrCopy3 = topDoc.$array.getDocument(true)
@@ -1195,8 +1195,251 @@ That second subscript is no longer an unbroken sequence of integers, so even if 
 
 # Creating and using Indices in QEWD-JSdb
 
-To follow.. watch this space!
+So far, we've focused on the process of getting data in and out of QEWD-JSdb, and navigating within the data structures.
+
+Databases need to be designed so that they can be queried efficiently, and that requires what are known as indices to be
+maintained.  Those indices provide a fast means of interogating the database and extracting the specific data records 
+requested by the user.
+
+It is searching via indices that sets databases apart from simple files for data storage.
+
+Let's consider a simple example:
+
+Suppose we had a set of records that provide a simple telephone directory.  Each record defines a telephone number,
+a first name, last name and town, eg:
+
+07123 456 789, Rob, Tweed, Redhill
+07712 345 678, Simon, Tweed, St Albans
+07321 987 765, Chris, Munt, Banstead
+07713 473 812, John, Smith, London
+07654 321 123, Susanne, Salling, Redhill
+... etc
+
+These could be saved into a text file.
+
+If you wanted to find the telephone numbers for everyone with a last name of *Tweed*, you would have to exhaustively
+inspect every line of text in the file before you could return the definitive result.  This wouldn't be a big deal if
+there were only a few records, even a few hundred records.  But if it contained tens of thousands, or millions of records,
+it would become a very time-consuming exercise, that would have to be repeated every time you made a similar query.
+
+By comparison, in a database, we would store two things:
+
+- the core data records, according to some particular model, eg in our case, a set of persistent JSON objects
+- a derived set of index records, which, for each last name value, would provide a pointer to the corresponding data record.
+
+So, in order to find all the telephone numbers for everyone with a last name of *Tweed*, the database would start with the
+*last name* index for its records containing the value *Tweed*.  Each of these records would provide a pointer directly to
+the corresponding data record, and from that record, the telephone number would be returned.
+
+With this approach, there is no need to exhaustively search the entire database.  We just search the specific records
+within the index.
+
+Indices come at a cost:
+
+- they need to be scrupulously maintained to correspond to any adds, changes or deletions in the main data records
+- they add to the physical disk drive storage consumed by the database
+
+However, in these days of high-performance, low cost CPUs and Hard Disk Drives and Solid State Drives, neither of these are
+particularly significant costs, and in return you get near instantaneous retrieval of the records that match your query.
+Generally speaking, the performance of databases is determined by the number of indices you maintain in parallel with the
+main data records.  The more likely a database record field is to be searched on, the more important it will be to have
+an index for it.  And, of course, if queries are constructed across multiple criteria, eg *find me all the phone numbers 
+of people named Tweed who live in Redhill*, then the queries can benefit from an index that identifies records by the 
+cobination of their *lastName* and *town* values.
+
+So, armed with what we now know about the QEWD-JSdb properties, methods and techniques, let's implement that example telephone directory, create an index for it,
+and then demonstrate how a last name query could be carried out.  To begin with we'll do it manually, so you can see
+how it can all b made to work.
+
+Let's start with the main data records.  We could do that using a simple JSON structure for each record:
+
+        {
+          firstName: 'Rob',
+          lastName: 'Tweed',
+          town: 'Redhill',
+          tel: '07123 456 789'
+        }
+
+We could assign each record an otherwise meaningless identifier - a simple incrementing integer would suffice,
+and then use this as what, in database terminology, is known as the primary key for the record.  So let's create that
+main data structure and save it:
+
+        var data = {
+          "1": {
+            "firstName": "Rob",
+            "lastName": "Tweed",
+            "town": "Redhill",
+            "tel": "07123 456 789"
+          },
+          "2": {
+            "firstName": "Simon",
+            "lastName": "Tweed",
+            "town": "St Albans",
+            "tel": "07712 345 678"
+          },
+          "3": {
+            "firstName": "Chris",
+            "lastName": "Munt",
+            "town": "Banstead",
+            "tel": "07321 987 765"
+          },
+          "4": {
+            "firstName": "John",
+            "lastName": "Smith",
+            "town": "London",
+            "tel": "07713 473 812"
+          },
+          "5": {
+            "firstName": "Susanne",
+            "lastName": "Salling",
+            "town": "Redhill",
+            "tel": "07654 321 123"
+          }
+        }
+
+       var telDoc = jsdb.use('telDirectory', 'data')
+       telDoc.setDocument(data);
 
 
+You'll see this in the *viewer*, saved as:
+
+        ^telDirectory("data",1,"firstName")="Rob"
+        ^telDirectory("data",1,"lastName")="Tweed"
+        ^telDirectory("data",1,"tel")="07123 456 789"
+        ^telDirectory("data",1,"town")="Redhill"
+        ^telDirectory("data",2,"firstName")="Simon"
+        ^telDirectory("data",2,"lastName")="Tweed"
+        ^telDirectory("data",2,"tel")="07712 345 678"
+        ^telDirectory("data",2,"town")="St Albans"
+        ^telDirectory("data",3,"firstName")="Chris"
+        ^telDirectory("data",3,"lastName")="Munt"
+        ^telDirectory("data",3,"tel")="07321 987 765"
+        ^telDirectory("data",3,"town")="Banstead"
+        ^telDirectory("data",4,"firstName")="John"
+        ^telDirectory("data",4,"lastName")="Smith"
+        ^telDirectory("data",4,"tel")="07713 473 812"
+        ^telDirectory("data",4,"town")="London"
+        ^telDirectory("data",5,"firstName")="Susanne"
+        ^telDirectory("data",5,"lastName")="Salling"
+        ^telDirectory("data",5,"tel")="07654 321 123"
+        ^telDirectory("data",5,"town")="Redhill"
 
 
+Now let's manually add a corresponding set of *lastName* index records.  To make searching easier, we'll lower-case
+each last name:
+
+        var index = {
+          "tweed": {
+            "1": "",
+            "2": ""
+          },
+          "munt": {
+            "3": ""
+          },
+          "smith": {
+            "4": ""
+          },
+          "salling": {
+            "5": ""
+          }
+        }
+
+We'll instantiate a different part of the *telDirectory* document for these index records, eg:
+
+        var indexDoc = jsdb.use('telDirectory', 'index', 'by_lastName')
+        indexDoc.setDocument(index);
+
+Look in the *viewer* and you'll see that this has resulted in these records being added to the database:
+
+        ^telDirectory("index","by_lastName","munt",3)=""
+        ^telDirectory("index","by_lastName","salling",5)=""
+        ^telDirectory("index","by_lastName","smith",4)=""
+        ^telDirectory("index","by_lastName","tweed",1)=""
+        ^telDirectory("index","by_lastName","tweed",2)=""
+
+Notice the first cool thing: that built-in automated subscript collation of the Global Storage database 
+has sorted the index in alphabetic order for us!  This is extremely useful for indices, as you'll see.
+
+Let's explain how and why these index records are defined:  against each lower-cased last name are all the record id numbers
+for the corresponding data records containing those last names.
+
+So now we can manually perform our search for all the telephone numbers of people with a last name of *tweed*:
+
+        indexDoc.$('tweed').forEachChild(function(id) {
+          console.log(telDoc.$([id, 'tel']).value)
+        });
+
+You can hopefully see how simple the task has become: use the *forEachChild()* method to get all the matching record ids,
+and, at each iteration, use this id to point to the data record (telDoc.$('id')), and then get the value for its *tel* property.
+
+Remember that we can use the *range* or *prefix* modifiers to make the query more generic, eg:
+
+
+        indexDoc.forEachChild({prefix: 's'}, function(lastName, node) {
+          node.forEachChild(function(id) {
+            console.log(lastName + ': ' + telDoc.$([id, 'tel']).value)
+          });
+        });
+
+will now match on any last name starting with the specified string, in this case *s*:
+
+        salling: 07654 321 123
+        smith: 07713 473 812
+
+
+If we now add a new data record and corresponding index record:
+
+        var data = {
+          "6": {
+            "firstName": "David",
+            "lastName": "Smythe",
+            "town": "Redhill",
+            "tel": "07613 173 475"
+          }
+        }
+        var index = {
+          "smythe": {
+            "6": ""
+          }
+        }
+        telDoc.setDocument(data)
+        indexDoc.setDocument(index)
+
+
+Now try the query again:
+
+        indexDoc.forEachChild({prefix: 's'}, function(lastName, node) {
+          node.forEachChild(function(id) {
+            console.log(lastName + ': ' + telDoc.$([id, 'tel']).value)
+          });
+        });
+
+It's picked up the new record, because the index record was automatically collated into the correct alphabetic sequence!
+
+        salling: 07654 321 123
+        smith: 07713 473 812
+        smythe: 07613 173 475
+
+
+And of course if we now search for last names starting with *sm*:
+
+        indexDoc.forEachChild({prefix: 'sm'}, function(lastName, node) {
+          node.forEachChild(function(id) {
+            console.log(lastName + ': ' + telDoc.$([id, 'tel']).value)
+          });
+        });
+
+We now just get these records:
+
+        smith: 07713 473 812
+        smythe: 07613 173 475
+
+
+Of course, we've done everything manually.  We'd actually want to automate this process:
+
+- create a set of CRUD APIs that allow new data records to be added and existing ones to be changed or deleted
+- for each of those APIs to create, change or delete the corresponding index record
+- create a generic lastName search API
+
+
+To be continued.... watch this space
