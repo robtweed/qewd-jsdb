@@ -1208,12 +1208,12 @@ Let's consider a simple example:
 Suppose we had a set of records that provide a simple telephone directory.  Each record defines a telephone number,
 a first name, last name and town, eg:
 
-07123 456 789, Rob, Tweed, Redhill
-07712 345 678, Simon, Tweed, St Albans
-07321 987 765, Chris, Munt, Banstead
-07713 473 812, John, Smith, London
-07654 321 123, Susanne, Salling, Redhill
-... etc
+        07123 456 789, Rob, Tweed, Redhill
+        07712 345 678, Simon, Tweed, St Albans
+        07321 987 765, Chris, Munt, Banstead
+        07713 473 812, John, Smith, London
+        07654 321 123, Susanne, Salling, Redhill
+        ... etc
 
 These could be saved into a text file.
 
