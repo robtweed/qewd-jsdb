@@ -1705,7 +1705,7 @@ of them is available for you to inspect and learn from.
 So, in addition to the basic QEWD-JSdb persistent JSON/JavaScript Obect and Document Database
 capabilities, QEWD-JSdb includes the following pre-implemented database models
 
-- [list](./LIST.md): a Redis-like List database
+- [lists](./LISTS.md): a Redis-like List database
 - [kvs](./KVS.md): a Redis-like Key Value store
 - [rdb](./RDB.md): a relational database with SQL support
 - [dom](./DOM.md): a persistent XML DOM implementation, complete with XPath support for querying it
