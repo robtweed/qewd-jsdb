@@ -72,7 +72,7 @@ Click the links below to view the code.
 - [browser-side JavaScript/jQuery](https://github.com/robtweed/qewd-jsdb/blob/master/www/lists/js/app.js)
 - [server-side message handlers](https://github.com/robtweed/qewd-jsdb/tree/master/qewd-apps/jsdb-lists)
 
-The application has been built in accordance to the [QEWD-Up](https://github.com/robtweed/qewd/blob/master/up/docs/InteractiveApps.md)
+The application has been built in accordance with the [QEWD-Up](https://github.com/robtweed/qewd/blob/master/up/docs/InteractiveApps.md)
  design framework for interactive applications.
 
 ## Source Code for the QEWD-JSdb Lists APIs
