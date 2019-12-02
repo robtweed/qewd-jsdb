@@ -90,9 +90,14 @@ Find the [Lists source code here](https://github.com/robtweed/ewd-document-store
 You can create and maintain a *List* at any QEWD-JSdb Document Node Object.
 
 Having instantiated the Document Object Node object, you must enable its use of the *List* APIs.
-For example:
+For example, from within a QEWD-Up back-end message handler module:
 
         doc = this.documentStore.use('jsdbList', 'demo')
+        doc.enable_list()
+
+or when using the *jsdb_shell* REPL module:
+
+        doc = jsdb.use('jsdbList', 'demo')
         doc.enable_list()
 
 The Document Node object will be augmented with a *list* property object, via which you can invoke

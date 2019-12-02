@@ -59,7 +59,7 @@ This browser-based application allows you to see the main QEWD-JSdb *KVS* APIs i
 together with the *viewer* application, see, in real-time, how they make use of the underlying Global Storage
 database.
 
-The *KVS* application has deliberately been written as a very simple, un-sexy-looking, plain HTML
+The *KVS* Explorer application has deliberately been written as a very simple, un-sexy-looking, plain HTML
 and JavaScript/jQuery application.  The reason is to allow developers to be able to quickly discover
 and understand how it works by looking at its source code, without the obfuscation that would result
 from the addition of a JavaScript framework such as Angular, Vue or React.  However, all the logic
@@ -90,9 +90,14 @@ Find the [KVS source code here](https://github.com/robtweed/ewd-document-store/t
 You can create and maintain a *Key/Value Store (KVS)* at any QEWD-JSdb Document Node Object.
 
 Having instantiated the Document Object Node object, you must enable its use of the *KVS* APIs.
-For example:
+For example, from within a QEWD-Up back-end message handler module:
 
         doc = this.documentStore.use('jsdbKvs', 'demo')
+        doc.enable_kvs()
+
+or when using the *jsdb_shell* REPL module:
+
+        doc = jsdb.use('jsdbKvs', 'demo')
         doc.enable_kvs()
 
 The Document Node object will be augmented with a *kvs* property object, via which you can invoke

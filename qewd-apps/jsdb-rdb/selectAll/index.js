@@ -4,10 +4,8 @@ module.exports = function(messageObj, session, send, finished) {
 
   var global = 'jsdbRdb';
   var subscripts = ['demo'];
-  var doc = this.documentStore.use(global, subscripts);
-  doc.enable_rdb();
 
-  var result = doc.rdb.sql('select * from jsdbdemo');
+  var result = this.documentStore.sql('select * from jsdbdemo');
 
   sendToViewers.call(this, global, subscripts);
   
