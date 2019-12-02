@@ -85,11 +85,29 @@ which they are made available.
 Find the [Lists source code here](https://github.com/robtweed/ewd-document-store/tree/master/lib/proto/list).
 
 
+## Enabling Use of the Lists APIs
+
+You can create and maintain a *List* at any QEWD-JSdb Document Node Object.
+
+Having instantiated the Document Object Node object, you must enable its use of the *List* APIs.
+For example:
+
+        doc = this.documentStore.use('jsdbList', 'demo')
+        doc.enable_list()
+
+The Document Node object will be augmented with a *list* property object, via which you can invoke
+the *List* APIs, eg:
+
+        var record = {a: 1, b: 2};
+
+        doc.list.lpush(record);
+
+
 ## Usage Notes on the Lists Explorer Application
 
 In the top row of the table you'll see the first of a set of pre-created record objects which will
 be used to populate a *List*.  Each time you push a record into the *List* using either the
-*lpush()* or *rpush()* methods, the next one will appear in the top table row.
+*lpush()*, *rpush()* or *insert_before()* methods, the next one will appear in the top table row.
 
 You can click the button in the second table row at any time to clear down the *List*.  If you do so, 
 the first table row will return to displaying the first of its pre-created records.

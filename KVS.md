@@ -85,6 +85,25 @@ which they are made available.
 Find the [KVS source code here](https://github.com/robtweed/ewd-document-store/tree/master/lib/proto/kvs).
 
 
+## Enabling Use of the KVS APIs
+
+You can create and maintain a *Key/Value Store (KVS)* at any QEWD-JSdb Document Node Object.
+
+Having instantiated the Document Object Node object, you must enable its use of the *KVS* APIs.
+For example:
+
+        doc = this.documentStore.use('jsdbKvs', 'demo')
+        doc.enable_kvs()
+
+The Document Node object will be augmented with a *kvs* property object, via which you can invoke
+the *KVS* APIs, eg:
+
+        var key = 123;
+        var record = {a: 1, b: 2};
+
+        doc.kvs.add(key, record);
+
+
 ## Usage Notes on the KVS Explorer Application
 
 In the top row of the table you'll see the first of a set of pre-created record objects which will
