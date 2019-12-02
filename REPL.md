@@ -1,4 +1,4 @@
-# Using the QEWD-JSdb REPL Explorer
+# Understanding QEWD-JSdb with the REPL Explorer
  
 Rob Tweed <rtweed@mgateway.com>  
 30 November 2019, M/Gateway Developments Ltd [http://www.mgateway.com](http://www.mgateway.com)  
@@ -6,6 +6,19 @@ Rob Tweed <rtweed@mgateway.com>
 Twitter: @rtweed
 
 Google Group for discussions, support, advice etc: [http://groups.google.co.uk/group/enterprise-web-developer-community](http://groups.google.co.uk/group/enterprise-web-developer-community)
+
+# About this Document
+
+This document provides a tutorial on the basics of QEWD-JSdb.
+
+It explains how to start the Node.js REPL Explorer environment for QEWD-JSdb, within
+which you'll be able to try out the database for yourself.
+
+Once you've completed this tutorial, you'll be able to understand and appreciate
+how the other database models supported by QEWD-JSdb work and have been constructed,
+and, if you wish, you'll be armed with the information you'll need to develop your
+own custom database models.
+
 
 # Starting the Node.js REPL
 
@@ -269,7 +282,13 @@ lock() to the same Document Node will be unsuccessful.
 # Time to Continue Exploring!
 
 Now that we've run through the underlying concepts and explained the various method and properties you
-can use in QEWD-JSdb, we can begin exploring it in earnest.  So back to the REPL, and remember to keep
+can use in QEWD-JSdb, we can begin exploring it in earnest.  
+
+Return, if necessary, to the section above that summarises the properties and methods of
+the Document Node Object.  They provide the basic building blocks for *everything* else in
+QEWD-JSdb.  You'll see how most of the work and are used throughout the rest of this tutorial.
+
+So back to the REPL, and remember to keep
 that *viewer* browser page open and available to watch!
 
 So let's start with that first node again:
@@ -288,9 +307,9 @@ That's because *doc* is a Document Node Object we defined using:
 which meant a Document Object Node representing a physical Global named *demo* with a single
 subscript: *x*
 
-We then applied its *value* property to assign the value *123*
+We then applied its *value* *setter* property to assign the value *123*
 
-We can now retrieve its value from the database:
+We can now retrieve its value from the database using *value* as a *getter* property:
 
         console.log(doc.value)
 
@@ -1195,6 +1214,8 @@ That second subscript is no longer an unbroken sequence of integers, so even if 
 
 # Creating and using Indices in QEWD-JSdb
 
+## What's an Index?
+
 So far, we've focused on the process of getting data in and out of QEWD-JSdb, and navigating within the data structures.
 
 Databases need to be designed so that they can be queried efficiently, and that requires what are known as indices to be
@@ -1234,6 +1255,9 @@ the corresponding data record, and from that record, the telephone number would 
 With this approach, there is no need to exhaustively search the entire database.  We just search the specific records
 within the index.
 
+
+## What are the downsides, if any, of Indexing?
+
 Indices come at a cost:
 
 - they need to be scrupulously maintained to correspond to any adds, changes or deletions in the main data records
@@ -1246,6 +1270,8 @@ main data records.  The more likely a database record field is to be searched on
 an index for it.  And, of course, if queries are constructed across multiple criteria, eg *find me all the phone numbers 
 of people named Tweed who live in Redhill*, then the queries can benefit from an index that identifies records by the 
 cobination of their *lastName* and *town* values.
+
+## Let's try using a simple Index
 
 So, armed with what we now know about the QEWD-JSdb properties, methods and techniques, let's implement that example telephone directory, create an index for it,
 and then demonstrate how a last name query could be carried out.  To begin with we'll do it manually, so you can see
@@ -1366,6 +1392,9 @@ for the corresponding data records containing those last names.  Notice that in 
 as you'll soon see, it's the property value (eg *tweed*) that is important, and not the index node's data value. So
 we'll just assign an empty string value to each index record.
 
+
+## Using the Index to locate records in the Database
+
 We can now manually perform our search for all the telephone numbers of people with a last name of *tweed*.
 Try this out:
 
@@ -1443,11 +1472,254 @@ We now just get these records:
         smythe: 07613 173 475
 
 
-Of course, we've done everything manually.  We'd actually want to automate this process:
+## Implementing APIs to Maintain Data and Index Records
+
+So far, we've done everything manually.  In the real world, we'd actually want to automate this process:
 
 - create a set of CRUD APIs that allow new data records to be added and existing ones to be changed or deleted
 - for each of those APIs to create, change or delete the corresponding index record
 - create a generic lastName search API
 
+Let's implement those APIs as functions that we can use in the REPL Explorer.  We'll just
+create them as local functions rather than save them as modules.  You can try doing that
+yourself later as an exercise.
 
-To be continued.... watch this space
+Copy and paste the following functions into the REPL:
+
+        function saveAndIndex(id, recordObj, jsdb) {
+          if (id && id !== '' && recordObj && recordObj.lastName && recordObj.lastName !== '') {
+            // set up the Document Node objects we'll need to use
+            var telDoc = jsdb.use('telDirectory');
+            var dataDoc = telDoc.$('data');
+            var indexDoc = telDoc.$(['index', 'by_lastName']);
+            recordObj.id = id;
+            // save the data record
+            dataDoc.$(id).setDocument(recordObj);
+            // save the index record
+            indexDoc.$([recordObj.lastName.toLowerCase(), id]).value = '';
+          }
+        }
+
+
+        function addRecord(recordObj, jsdb) {
+          // first check the record object is valid
+          if (recordObj && recordObj.lastName && recordObj.lastName !== '') {
+            // set up the Document Node objects we'll need to use
+            var telDoc = jsdb.use('telDirectory');
+            // get the next id (1 will be returned the first time this is invoked)
+            var id = telDoc.$('next_id').increment();
+            // save and index the new record
+            saveAndIndex(id, recordObj, telDoc);
+            return id;
+          }
+        }
+
+The second one above is the API we'll use to add a new record into our telephone directory.  It uses a Document Node
+method that we've not seen before: *increment()*.  It's an ideal method for creating identifiers.
+We're using a specific Document Node - *(telDoc.$('next_id'))* - as the counter for
+getting the next new id each time we add a record.  Watch for this in the *viewer* later when we
+try these API functions out.
+
+Now copy and paste the delete API:
+
+        function deleteRecord(id, recordObj, jsdb) {
+          // check the incoming record object for validity
+          if (recordObj && recordObj.lastName && recordObj.lastName !== '') {
+            // set up the Document Node objects we'll need to use
+            var telDoc = jsdb.use('telDirectory');
+            var dataDoc = telDoc.$('data');
+            var indexDoc = telDoc.$(['index', 'by_lastName']);
+            //check the incoming id is valid and is already in use
+            if (id && id !== '' && dataDoc.$(id).exists) {
+              // get the current lastName
+              var selectedDoc = dataDoc.$(id);
+              var lastName = selectedDoc.$('lastName').value.toLowerCase();
+              // delete the corresponding index;
+              indexDoc.$([lastName, id]).delete();
+              // Now delete the data
+              selectedDoc.delete();
+              dataDoc.$(id).setDocument(recordObj);
+              return true;
+            }
+          }
+        }
+
+
+And next copy and paste the edit API function:
+
+        function editRecord(id, recordObj, jsdb) {
+          var ok = deleteRecord(id, recordObj, jsdb);
+          if (ok) {
+            // save and index the new data for this record
+            saveAndIndex(id, recordObj, jsdb);
+          }
+        }
+
+Finally we'll add the search API:
+
+        function getByLastName(lastName, jsdb) {
+          var nodes = [];
+          if (lastName !== '') {
+            // set up the Document Node objects we'll need to use
+            var telDoc = jsdb.use('telDirectory');
+            var dataDoc = telDoc.$('data');
+            var indexDoc = telDoc.$(['index', 'by_lastName']);
+            indexDoc.forEachChild({prefix: lastName}, function(ix, node) {
+              node.forEachChild(function(id) {
+                nodes.push(dataDoc.$(id).getDocument());
+              });
+            });
+          }
+          return nodes;
+        }
+
+
+OK let's clear down the data we'd previously saved in our telephone directory:
+
+        var telDoc = jsdb.use('telDirectory');
+        telDoc.delete();
+
+
+OK let's add a first record using these APIs:
+
+        var record = {
+          firstName: 'Rob',
+          lastName: 'Tweed',
+          town: 'Redhill',
+          tel: '07123 456 789'
+        }
+        addRecord(record, jsdb)
+
+Check in the *viewer* application.  You should see that it's saved it as:
+
+        ^telDirectory("data",1,"firstName")="Rob"
+        ^telDirectory("data",1,"id")=1
+        ^telDirectory("data",1,"lastName")="Tweed"
+        ^telDirectory("data",1,"tel")="07123 456 789"
+        ^telDirectory("data",1,"town")="Redhill"
+        ^telDirectory("index","by_lastName","tweed",1)=""
+        ^telDirectory("next_id")=1
+
+..and also notice the JSON view in the right-hand panel.
+
+
+Let's add a second record:
+
+        record = {
+          firstName: 'Simon',
+          lastName: 'Tweed',
+          town: 'St Albans',
+          tel: '07712 345 678'
+        }
+        addRecord(record, jsdb)
+
+Look in the viewer and you'll see that an *id* of 2 was assigned to this, and the *next_id*
+node was incremented by 1:
+
+        ^telDirectory("next_id")=2
+
+Let's try a search:
+
+        var nodes = getByLastName('tweed', jsdb)
+
+What's been returned is an array of matching data records.  Type:
+
+        nodes
+
+and you'll see the records.  Do these look correct?  Hopefully they should!
+
+Next, try editing a record, for example:
+
+        record = {
+          firstName: 'Simon',
+          lastName: 'Smith',
+          town: 'St Albans',
+          tel: '07712 345 678'
+        }
+        editRecord(2, record, jsdb)
+
+If you look in the *viewer*, you should see that the data record has correctly changed:
+
+        ^telDirectory("data",2,"lastName")="Smith"
+
+and the index records have been appropriately changed too:
+
+        ^telDirectory("index","by_lastName","smith",2)=""
+        ^telDirectory("index","by_lastName","tweed",1)=""
+
+
+In order to edit that record, we had to know that its *id* was 2.  This isn't something
+we'd usually have known, so how would we have found that out.
+
+A simple solution is provided by the *saveAndIndex* function adding the *id* to the data
+record, eg:
+
+        ^telDirectory("data",2,"id")=2
+
+This might appear to be a redundant record, but remember when we ran the query, it returned the data values:
+
+
+        > nodes
+        [
+          {
+            firstName: 'Rob',
+            id: 1,
+            lastName: 'Tweed',
+            tel: '07123 456 789',
+            town: 'Redhill'
+          },
+          {
+            firstName: 'Simon',
+            id: 2,
+            lastName: 'Tweed',
+            tel: '07712 345 678',
+            town: 'St Albans'
+          }
+        ]
+
+So we could have retrieved the *id* as nodes[1].id, having first found the record using a search.
+
+
+Anyway, having edited that telephone directory record, let's try our name search again:
+
+
+        nodes = getByLastName('tweed', jsdb)
+
+Now it should return just one matching record in the array.  And then try:
+
+        nodes = getByLastName('smith', jsdb)
+
+
+# Building Database Models with QEWD-JSdb
+
+The APIs we've created above have effectively implemented a simple database model.  In
+this case, quite deliberately, it's a very restricted use-case with quite limited
+capabilities, but it hopefully demonstrates the basic techniques you can use to
+build higher-level database functionality using the basic buidling-block properties and
+methods provided by QEWD-JSdb.
+
+QEWD-JSdb includes a number of pre-implemented data models, all of which are just really
+variations on the themes we've explored in this tutorial.  Of course, the source logic for each
+of them is available for you to inspect and learn from.
+
+So, in addition to the basic QEWD-JSdb persistent JSON/JavaScript Obect and Document Database
+capabilities, QEWD-JSdb includes the following pre-implemented database models
+
+- [list](./LIST.md): a Redis-like List database
+- [kvs](./KVS.md): a Redis-like Key Value store
+- [rdb](./RDB.md): a relational database with SQL support
+- [dom](./DOM.md): a persistent XML DOM implementation, complete with XPath support for querying it
+
+These are examined in more detail in separate documents (use the links above), and can be explored using their own
+browser-based explorer interface (though you could also use the REPL for your own manual
+exploration of them if you wish).
+
+You can see that QEWD-JSdb is therefore not just a "one trick pony" database, limited to just
+one database model.  It's a fully-functional multi-model database, with both SQL and NoSQL
+capabilities.  It's a bit like having an SQL database like Oracle, SQL Server or Postgres, 
+a Document database like MongoDB, a key/value store like Redis and a Native XML Database like
+Mark Logic, all available to you at once, all intimately available to you via 
+JavaScript.  And, if you use YottaDB as the QEWD-JSdb database engine, 
+it's all Open Source!
+
+Enjoy your further exploration of QEWD-JSdb!

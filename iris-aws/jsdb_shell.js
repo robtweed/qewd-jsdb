@@ -3,7 +3,7 @@
  ----------------------------------------------------------------------------
  | qewd-jsdb-shell: For use in Node REPL                                    |
  |                                                                          |
- | Copyright (c) 2019 M/Gateway Developments Ltd,                        |
+ | Copyright (c) 2019 M/Gateway Developments Ltd,                           |
  | Redhill, Surrey UK.                                                      |
  | All rights reserved.                                                     |
  |                                                                          |
@@ -24,9 +24,11 @@
  |  limitations under the License.                                          |
  ----------------------------------------------------------------------------
 
-  28 November 2019
+  2 December 2019
 
 */
+
+var http = require('http');
 
 function jsdb() {
   var qewd_mg_dbx = require('qewd-mg-dbx');
@@ -47,8 +49,35 @@ function jsdb() {
   if (status.error) return status;
   var documentStore = new DocumentStore(db);
   documentStore.close = db.close.bind(db);
+
+  var displayInViewer = function(glo) {
+    var viewer_refresh_url = 'http://localhost:8080/jsdb/viewer/refresh?global=' + glo.documentName;
+    http.get(viewer_refresh_url, function(response) {
+    });
+  };
+
+  var viewerEnabled = false;
+
+  documentStore.viewer = {
+    enable: function() {
+      if (!viewerEnabled) {
+        documentStore.on('afterSet', displayInViewer);
+        documentStore.on('afterDelete', displayInViewer);
+        viewerEnabled = true;
+      }
+    },
+    disable: function() {
+      if (viewerEnabled)
+      documentStore.removeListener('afterSet', displayInViewer);
+      documentStore.removeListener('afterDelete', displayInViewer);
+      viewerEnabled = false;
+    }
+  };
+  documentStore.viewer.enable();
+
   return documentStore;
 
 };
 
 module.exports = jsdb();
+
