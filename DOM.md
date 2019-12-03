@@ -479,8 +479,8 @@ And there is our tag!
 
 So now let's add a child Element to this top XML tag:
 
-Parent Element:  #top
-New Element Tag: <bar id="bar1">Frog and Ferkin</bar>
+- Parent Element:  #top
+- New Element Tag: <bar id="bar1">Frog and Ferkin</bar>
 
 Click the *appendElement* tag, and now you'll see further nodes have been added to the DOM.  
 See if you can figure out how and why they have been added.  The one I'll draw your
