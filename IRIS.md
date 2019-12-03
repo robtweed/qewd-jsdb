@@ -30,18 +30,19 @@ Specifically, add a new Rule as follows:
 These ports will be used by QEWD's Web Server
 
 
-# Preparing the EC2 Image
+# Preparing IRIS for QEWD-JSdb
 
 Once the EC2 instance is up and running, you need to:
 
 - change your IRIS *_SYSTEM* user password
 - enable the C Callin interface
+- add Routine Mapping for the *mgsql* routines used by QEWD-JSdb
 
-The easiest way to do both steps is to start the IRIS System Management Portal.
+The easiest way to do these steps is to start the IRIS System Management Portal.
 The first time you start this, you'll be forced to change the password for the
 *_SYSTEM* user.
 
-Make sure you change it, for now, to *secret123*
+**IMPORTANT**: Make sure you change it, for now, to *secret123*
 
 
 Next, navigate the System Management Portal menus as follows:
@@ -54,12 +55,32 @@ Next, navigate the System Management Portal menus as follows:
 
 - Check the *Service Enabled* box and Click *Save*
 
+Next, you must define Routine Mappings for the *mgsql* routines used by QEWD-JSdb.
+Navigate to:
+
+- System Administration
+  - Configuration
+    - System Configuration
+      - Namespaces
+
+In the *USER* namespace row, click the *Routine Mappings* link
+
+Now click the *New* button, and in the pop-up window, select USER from the *Routine Database Location*
+drop-down, and enter *%mg\** in the *Routine Name* text box.
+
+Click the *Apply* button, then *Cancel* to close the pop up.
+
+**IMPORTANT**: Make sure you now click the *Save Changes* button!  It may be a few seconds before
+you get back control of the browser, so be patient.  Click the *Cancel* button when it's done.
+
+That's IRIS configured and ready for the installation of QEWD-JSdb.
 
 
+# Fetching the QEWD-JSdb Installer
 
-Next, SSH into it as the user *ubuntu*.
+SSH into the EC2 instance as the user *ubuntu*.
 
-Install *subversion*:
+Install *subversion* so we can fetch the installation kit:
 
         sudo apt-get update
         sudo apt-get install -y subversion
@@ -134,22 +155,27 @@ You can now exit the Container's shell by typing:
         exit
 
 
+# Install and Configure the QEWD-JSdb Showcase Repository
 
-# Create a QEWD-Up Application
-
-We'll just use a simple demo application that I've created for you to test.
+We're going to install the QEWD-JSdb showcase application
 
 In the host system (ie **NOT** in the Container's shell), type:
 
-        svn export https://github.com/robtweed/qewd/trunk/up/examples/iris-ce-aws/simple /opt/ISC/qewd-example
+        cd /opt/ISC
+        git clone https://github.com/robtweed/qewd-jsdb
 
-You'll now see a directory named */opt/ISC/qewd-example* that contains a very simple 
-QEWD-Up Application definition
+You'll now see a directory named */opt/ISC/qewd-jsdb* that contains the QEWD-JSdb showcase
+
+It needs to be reconfigured for use with IRIS:
+
+        cd qewd-jsdb
+        source install_on_iris_aws.sh
 
 
-# Install the QEWD Application
+# Install the QEWD-JSdb Application
 
-This step only needs doing once.  It installs all the Node.js modules used by QEWD.
+This step only needs doing once.  It installs all the Node.js modules used by the 
+QEWD instance used by QEWD-JSdb
 
 Shell into the IRIS container as *root*:
 
@@ -159,20 +185,23 @@ Shell into the IRIS container as *root*:
 
 Once you're into the container's shell, type:
 
-        cd /ISC/qewd-example
+        cd /ISC/qewd-jsdb
         npm install
 
 
-You're now ready to start the QEWD Application
+When it completes, you're ready to start QEWD-JSdb
 
 
+# Starting QEWD-JSdb
 
-# Start the QEWD Application
+Each time you want to start QEWD-JSdb, first make sure you're in the IRIS container's
+shell (using the root user as shown previously), and in the */ISC/qewd-jsdb* directory, ie:
 
-Each time you want to start the QEWD application, first make sure you're in the IRIS container's
-shell and in the */ISC/qewd-example* directory.
+        sudo docker exec --user="root" -it qewd-iris bash
 
-        cd /ISC/qewd-example
+and once in the Container's shell:
+
+        cd /ISC/qewd-jsdb
 
 
 Then, start the QEWD Application by typing:
@@ -180,7 +209,7 @@ Then, start the QEWD Application by typing:
         npm start
 
 
-QEWD is ready for use when you see this:
+QEWD-JSdb is ready for use when you see this:
 
         ========================================================
         ewd-qoper8 is up and running.  Max worker pool size: 2
@@ -190,57 +219,40 @@ QEWD is ready for use when you see this:
         ========================================================
 
 
+# Starting the QEWD-JSdb REPL
 
-# Try the QEWD-Up Application's REST APIs
+To use the QEWD-JSdb REPL Explorer with IRSI, you first need to shell into the IRIS Container:
 
-Everthing should now be ready, so you can try out the simple demo QEWD-Up Application.  
-
-If you look in the file *~/qewd-example/configuration/routes.json* you'll see that it just defines a single REST API:
+         sudo docker exec --user="root" -it qewd-iris bash
 
 
-        [
-          {
-            "uri": "/api/info",
-            "method": "GET",
-            "handler": "getInfo" 
-          }
-        ]
+Once you're in the container's *bash* shell, start the Node.js REPL:
 
-Let's try it from your browser:
+        node
 
-        http://x.x.x.x:8080/api/info
+You'll see something iike this:
 
-and you should get back a JSON response that looks something like this:
+        root@f300aaeefa1e:/opt/qewd/mapped# node
+        Welcome to Node.js v12.13.0.
+        Type ".help" for more information.
+        >
 
-        {
-            "info": {
-                "server": "QEWD-Up Monolith",
-                "arch": "x64",
-                "platform": "linux",
-                "versions": {
-                    "http_parser": "2.8.0",
-                    "node": "8.15.0",
-                    "v8": "6.2.414.75",
-                    "uv": "1.23.2",
-                    "zlib": "1.2.11",
-                    "ares": "1.10.1-DEV",
-                    "modules": "57",
-                    "nghttp2": "1.33.0",
-                    "napi": "3",
-                    "openssl": "1.0.2q",
-                    "icu": "60.1",
-                    "unicode": "10.0",
-                    "cldr": "32.0",
-                    "tz": "2017c"
-                },
-                "memory": {
-                    "rss": 46526464,
-                    "heapTotal": 18169856,
-                    "heapUsed": 9761680,
-                    "external": 177752
-                }
-            }
-        }
+Now start up the QEWD-JSdb shell:
+
+        var jsdb = require('./jsdb_shell');
+
+You'll see this:
+
+        > var jsdb = require('./jsdb_shell')
+        undefined
+        >
+
+
+The *jsdb* object provides you with access to QEWD-JSdb.  
+
+You can now proceed with the QEWD-JSdb REPL-based Explorer tutorial by 
+[clicking here](./REPL.md#start-the-viewer-application).
+
 
 
 # Try the QEWD-Monitor Application
