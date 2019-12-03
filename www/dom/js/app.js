@@ -30,51 +30,118 @@ var test_xml = '<doc>\n\
 ';
 
 var test_json = {
-  "data": {
-    "fcaf4680-ceeb-47b2-b81c-3a194de6ae9c::local.ethercis.com::1": {
-      "adverse_reaction_list": {
-        "_uid": "fcaf4680-ceeb-47b2-b81c-3a194de6ae9c::local.ethercis.com::1",
-        "language|code": "en",
-        "language|terminology": "ISO_639-1",
-        "territory|code": "GB",
-        "territory|terminology": "ISO_3166-1",
-        "context": {
-          "_health_care_facility|id": "999999-345",
-          "_health_care_facility|id_scheme": "2.16.840.1.113883.2.1.4.3",
-          "_health_care_facility|id_namespace": "NHS-UK",
-          "_health_care_facility|name": "Home",
-          "start_time": "2019-11-22T12:26:51.990Z",
-          "setting|code": "238",
-          "setting|value": "other care",
-          "setting|terminology": "openehr"
-        },
-        "allergies_and_adverse_reactions": {
-          "adverse_reaction_risk": [
-            {
-              "causative_agent|code": "91936005",
-              "causative_agent|value": "pollen",
-              "causative_agent|terminology": "SNOMED-CT",
-              "reaction_details": {
-                "manifestation": [
-                  {
-                    "|code": "28926001",
-                    "|value": "sneezing",
-                    "|terminology": "SNOMED-CT"
-                  }
-                ],
-                "comment": "test"
-              },
-              "language|code": "en",
-              "language|terminology": "ISO_639-1",
-              "encoding|code": "UTF-8",
-              "encoding|terminology": "IANA_character-sets"
-            }
-          ]
-        },
-        "composer|name": "Rob Tweed"
+  "resourceType": "Patient",
+  "text": {
+    "status": "generated"
+  },
+  "identifier": [
+    {
+      "use": "usual",
+      "label": "MRN",
+      "system": "urn:oid:1.2.36.146.595.217.0.1",
+      "value": "12345",
+      "period": {
+        "start": "2001-05-06"
+      },
+      "assigner": {
+        "display": "Acme Healthcare"
       }
     }
-  }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "family": [
+        "Chalmers"
+      ],
+      "given": [
+        "Peter",
+        "James"
+      ]
+    },
+    {
+      "use": "usual",
+      "given": [
+        "Jim"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "use": "home"
+    },
+    {
+      "system": "phone",
+      "value": "(03) 5555 6473",
+      "use": "work"
+    }
+  ],
+  "gender": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v3/AdministrativeGender",
+        "code": "M",
+        "display": "Male"
+      }
+    ]
+  },
+  "birthDate": "1974-12-25",
+  "deceasedBoolean": false,
+  "address": [
+    {
+      "use": "home",
+      "line": [
+        "534 Erewhon St"
+      ],
+      "city": "PleasantVille",
+      "state": "Vic",
+      "zip": "3999"
+    }
+  ],
+  "contact": [
+    {
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/patient-contact-relationship",
+              "code": "partner"
+            }
+          ]
+        }
+      ],
+      "name": {
+        "family": [
+          "du",
+          "March"
+        ],
+        "_family": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/Profile/iso-21090#qualifier",
+                "valueCode": "VV"
+              }
+            ]
+          },
+          null
+        ],
+        "given": [
+          "Benedicte"
+        ]
+      },
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "+33 (237) 998327"
+        }
+      ]
+    }
+  ],
+  "managingOrganization": {
+    "reference": "Organization/1"
+  },
+  "active": true
 };
 
 $(document).ready(function() {
