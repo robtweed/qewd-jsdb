@@ -76,7 +76,7 @@ you get back control of the browser, so be patient.  Click the *Cancel* button w
 That's IRIS configured and ready for the installation of QEWD-JSdb.
 
 
-# Fetching the QEWD-JSdb Installer
+# Fetching the QEWD Installation for IRIS
 
 SSH into the EC2 instance as the user *ubuntu*.
 
@@ -226,7 +226,11 @@ To use the QEWD-JSdb REPL Explorer with IRSI, you first need to shell into the I
          sudo docker exec --user="root" -it qewd-iris bash
 
 
-Once you're in the container's *bash* shell, start the Node.js REPL:
+Once you're in the container's *bash* shell, swicth to the */ISC/qewd-jsdb* directory:
+
+        cd /ISC/qewd-jsdb
+
+Then start the Node.js REPL:
 
         node
 
