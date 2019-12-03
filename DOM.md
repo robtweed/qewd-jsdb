@@ -505,8 +505,8 @@ Click the *Output as XML* button again and you'll see how our XML document now l
 
 Next, try this:
 
-Parent Element:  #top
-New Element Tag: <bar id="bar2">The Plough</bar>
+- Parent Element:  #top
+- New Element Tag: <bar id="bar2">The Plough</bar>
 
 and clicking *Output as XML* should now show:
 
