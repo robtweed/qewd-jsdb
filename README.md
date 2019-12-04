@@ -28,7 +28,7 @@ multi-model database which we refer to as *QEWD-JSdb*.
 This database is powered by one of two actual database technologies:
 
 1) The Open Source [YottaDB](https://yottadb.com/), which is the database bundled into
-the ]Dockerised version of QEWD](https://hub.docker.com/r/rtweed/qewd-server)
+the [Dockerised version of QEWD](https://hub.docker.com/r/rtweed/qewd-server)
 
 2) The proprietary [IRIS](https://www.intersystems.com/products/intersystems-iris/) database from InterSystems
 
@@ -196,6 +196,12 @@ QEWD-JSdb's the persistent JavaScript object abstraction.
 
 The full functionality of QEWD-JSdb is built-in to QEWD, and available for you to use in your
 applications if you wish.  You can use QEWD-JSdb instead of any other more "traditional" database.
+
+Both actual database technologies used by QEWD-JSdb ([YottaDb](https://yottadb.com/) and
+[IRIS](https://www.intersystems.com/products/intersystems-iris/)) are seriously-powerful, 
+massively-scalable, industrial-strength products, with
+decades of expertise and real-world, business-critical use behind them in demanding market-sectors
+such as banking, financial services, healthcare and retail.
 
 Take a look at the source code in this *QEWD-jsdb* repository to see how quick, simple and
 easy it is to use:
