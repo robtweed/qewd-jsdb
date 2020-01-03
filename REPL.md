@@ -283,50 +283,50 @@ Global Nodes.
 
 The properties of a Document Node Object are:
 
-- ##exists##: Does the corresponding Global Node physically exists in the database? (*true* | *false*)
-- ##hasValue##: Is the corresponding Global Node a leaf node with a value? (*true* | *false*)
-- ##hasChildren##: Is the corresponding Global Node an intermediate node within the
+- **exists**: Does the corresponding Global Node physically exists in the database? (*true* | *false*)
+- **hasValue**: Is the corresponding Global Node a leaf node with a value? (*true* | *false*)
+- **hasChildren**: Is the corresponding Global Node an intermediate node within the
 hierarchy? (*true* | *false*)
 
-- ##value##: a read/write property that either sets a value for the Document Node, or returns its value.  If
+- **value**: a read/write property that either sets a value for the Document Node, or returns its value.  If
 the Node does not exist, an empty string value is returned.  Note that it is quite valid for a Global
 Node to also have an empty string as a value.
 
-- ##parent##: returns a Document Node Object representing the hierarchical parent of the current Document Node.
-- ##firstChild##: returns a Document Node Object representing the first child Node (if it exists) of the current Document Node.
-- ##lastChild##: returns a Document Node Object representing the last child Node (if it exists) of the current Document Node.
-- ##nextSibling##: returns a Document Node Object representing the current Document Node's next sibling node (if it exists).
-- ##previousSibling##: returns a Document Node Object representing the current Document Node's previous sibling node (if it exists).
+- **parent**: returns a Document Node Object representing the hierarchical parent of the current Document Node.
+- **firstChild**: returns a Document Node Object representing the first child Node (if it exists) of the current Document Node.
+- **lastChild**: returns a Document Node Object representing the last child Node (if it exists) of the current Document Node.
+- **nextSibling**: returns a Document Node Object representing the current Document Node's next sibling node (if it exists).
+- **previousSibling**: returns a Document Node Object representing the current Document Node's previous sibling node (if it exists).
 
-- ##path##: returns an array of the subscripts for this Document Node
-- ##documentName##: returns the documentName, aka the corresponding Global name
-- ##name##: the Node's property name, ie the last subscript for this Node
+- **path**: returns an array of the subscripts for this Document Node
+- **documentName**: returns the documentName, aka the corresponding Global name
+- **name**: the Node's property name, ie the last subscript for this Node
 
 
 ### Document Node Object Methods
 
 The methods of a Document Node Object are:
 
-- ##delete()##: deletes the corresponding Global Node from the physical database.  The Document Node Object will, however, continue to exist
-- ##increment(*by*)##: increments the value of the Document Node by the amount specified in the 
+- **delete()**: deletes the corresponding Global Node from the physical database.  The Document Node Object will, however, continue to exist
+- **increment(*by*)**: increments the value of the Document Node by the amount specified in the 
 argument (default = 1).  Useful for counters or automatic assignment of identifiers
-- ##countChildren()##: returns the number of Child Document Nodes that physically exist in the database below the current Document Node
-- ##$(*subscript*)## or ##$(*arrayOfSubscripts*)##: returns a new Document Node object that represents the additional level of 
+- **countChildren()**: returns the number of Child Document Nodes that physically exist in the database below the current Document Node
+- **$(*subscript*)** or **$(*arrayOfSubscripts*)**: returns a new Document Node object that represents the additional level of 
 Global Node subscripting below the current Node
-- ##getDocument(*useArrays*)##: retrieves the data represented in the sub-tree starting with the 
+- **getDocument(*useArrays*)**: retrieves the data represented in the sub-tree starting with the 
 current Document Node as a JSON document.  If *useArrays* is *true*, it will attempt to retrieve 
 arrays where consecutive numeric subsript values exist in the physical Global storage.  Unless you're 
 sure that the stored data did not include arrays, it is best to use *true*.  However, *getDocument(false)* 
 is faster to execute, but will return numeric subscript as properties in the returned JSON.
-- ##setDocument(*object*)##: Stores the specified JavaScript object/JSON as a sub-tree of Global Nodes beneath the
+- **setDocument(*object*)**: Stores the specified JavaScript object/JSON as a sub-tree of Global Nodes beneath the
 current Document Node.
-- ##forEachChild()##: allows you to iterate through the child subscripts of the current Document Node.
-- ##forEachleafNode##: allows you to iterate through any leaf nodes that are descendents of the current
+- **forEachChild()**: allows you to iterate through the child subscripts of the current Document Node.
+- **forEachleafNode**: allows you to iterate through any leaf nodes that are descendents of the current
 Document Node.
-- ##lock(*timeout*)##: attempts to set a lock on the Document Node.  If unable to within the specified timeout (seconds),
+- **lock(*timeout*)**: attempts to set a lock on the Document Node.  If unable to within the specified timeout (seconds),
 it returns *false*, otherwise *true* if successful.  Once locked, any other process attempting to apply a 
 lock() to the same Document Node will be unsuccessful.
-- ##unlock()##: removes a previously set lock on the Document Node.
+- **unlock()**: removes a previously set lock on the Document Node.
 
 
 
