@@ -14,7 +14,8 @@ This repository is a showcase demonstrating the power and capabilities of *QEWD-
 
 It includes 2 versions:
 
-1) A Dockerised version of QEWD that will run on any Linux system or on a Raspberry Pi
+1) A Dockerised version of QEWD (including QEWD-JSdb) that will have you up and running in
+just a few minutes on any Linux system or on a Raspberry Pi
 
 2) A version that will run on the InterSystems 
 [AWS Community Edition of IRIS](https://aws.amazon.com/marketplace/pp/B07MSHYLF1?qid=1575041206953&sr=0-1&ref_=srh_res_product_title)
@@ -25,14 +26,14 @@ It includes 2 versions:
 Every instance of [QEWD](https://github.com/robtweed/qewd) includes an in-process
 multi-model database which we refer to as *QEWD-JSdb*.
 
-This database is powered by one of two actual database technologies:
+This database is powered by one of two actual physical database technologies:
 
-1) The Open Source [YottaDB](https://yottadb.com/), which is the database bundled into
+1) The Free Open Source [YottaDB](https://yottadb.com/), which is the database bundled into
 the [Dockerised version of QEWD](https://hub.docker.com/r/rtweed/qewd-server)
 
 2) The proprietary [IRIS](https://www.intersystems.com/products/intersystems-iris/) database from InterSystems
 
-As far as QEWD-JSdb is concerned, both these databases work identically, and all the QEWD-JSdb
+As far as QEWD-JSdb is concerned, both these databases work and behave identically, and all the QEWD-JSdb
 database models are fully-supported in both databases.
 
 QEWD-JSdb is a mult-model SQL & NoSQL Database which currently supports:
@@ -43,10 +44,11 @@ QEWD-JSdb is a mult-model SQL & NoSQL Database which currently supports:
   - Relational Database (with SQL support)
   - Persistent XML DOM (with XPath support)
 
-Further database models (eg Graph) would easily be possible to develop in future.
-
 You can create and maintain any or all of these database models simultaneously, and, indeed you can
-apply different views to the same physical database.
+apply different views simultaneously to the same physical QEWD-JSdb database.
+
+Further database models (eg Graph) would easily be possible to develop in future.  Developers can
+easily create their own custom database models using the core QEWD-JSdb APIs.
 
 What really sets QEWD-JSdb apart from every other database you're likely to come across is that it
 runs in-process with Node.js (ie rather than running on a separate server, linked to Node.js via a
@@ -59,7 +61,8 @@ In QEWD-JSdb, the JavaScript you write in Node.js has an intimate relationship w
 it blurs the use of in-memory versus persistent on-disk data structures.
 
 It's also incredibly fast: both YottaDB and IRIS are extremely high-performance databases, capable of
-reading and writing millions of key/value pairs per second, even on modest hardware.
+reading and writing millions of key/value pairs per second - ie near-in-memory speed, 
+even on modest hardware.
 
 This showcase is designed to allow you to quickly discover the unique and incredible 
 capabalities of QEWD-JSdb.
@@ -85,11 +88,11 @@ one of the supported database models:
   - Persistent XML DOM (with XPath support)
 
 - a WebSocket-based browser viewer page that allows you to view, in real-time,
- changes made the physical database via the above explorer web pages
+ changes made the physical YottaDB or IRIS database via the above *explorer* web pages
 
 
 
-## Try it out
+## Getting Started
 
 For the IRIS / AWS Version, see [these instructions](./IRIS.md).
 
@@ -103,7 +106,7 @@ Here's all you need to do:
         cd qewd-jsdb
         source install.sh
 
-Simply answer the questions and within a few minutes you'll have it all ready to run.
+Simply answer the sefl-explanatory questions and within a few minutes you'll have it all ready to run.
 
 Don't worry if you don't have Docker installed (which is the only dependency) - the installer
 will also install Docker if necessary (though you'll need to start a new process and re-run
@@ -132,6 +135,11 @@ To stop the Docker Container, you should always use the command:
 This cleanly and safely shuts down the database-connected QEWD Worker Processes
 
 
+# QEWD-JSdb Tutorial
+
+Before going any further, it is recommended that you take the [QEWD-JSdb Tutorial](./REPL.md).  This is a hands-on
+guide which allows you to explore QEWD-JSdb using the Node.js REPL.
+
 
 # The Viewer Application
 
@@ -144,15 +152,6 @@ Use the following URL in your browser:
 This is a simple QEWD WebSocket application that will display, in real-time,
  any changes made by the explorer applications or during REPL-based exploration of
  QEWD-JSdb.
-
-
-# The REPL-based Explorer
-
-I'd recommend that you start by exploring QEWD-JSdb using the Node.js REPL.  
-You can use the viewer application (see above)
-to see, in real-time, the effect on the database of your QEWD-JSdb interactions.  See 
-[here for detailed instructions](./REPL.md) on using this REPL explorer mode.  It really
-is the best way to begin to understand QEWD-JSdb.
 
 
 # The Explorer Applications
@@ -259,7 +258,7 @@ directory.
 
 ## License
 
- Copyright (c) 2019 M/Gateway Developments Ltd,                           
+ Copyright (c) 2019-20 M/Gateway Developments Ltd,                           
  Redhill, Surrey UK.                                                      
  All rights reserved.                                                     
                                                                            

@@ -9,7 +9,7 @@ Google Group for discussions, support, advice etc: [http://groups.google.co.uk/g
 
 # About this Document
 
-This document provides a tutorial on the basics of QEWD-JSdb.
+This document provides a detailed Tutorial on the fundamentals of QEWD-JSdb.
 
 It explains how to start the Node.js REPL Explorer environment for QEWD-JSdb, within
 which you'll be able to try out the database for yourself.
@@ -18,6 +18,52 @@ Once you've completed this tutorial, you'll be able to understand and appreciate
 how the other database models supported by QEWD-JSdb work and have been constructed,
 and, if you wish, you'll be armed with the information you'll need to develop your
 own custom database models.
+
+# Installation
+
+For the IRIS / AWS Version of QEWD-JSdb, [see these instructions](./IRIS.md).
+
+However, the quickest way to try out QEWD-JSdb is using the pre-built Docker version which will run on
+any Linux system or even on a Raspberry Pi.
+
+Here's all you need to do to install it:
+
+        cd ~
+        git clone https://github.com/robtweed/qewd-jsdb
+        cd qewd-jsdb
+        source install.sh
+
+Simply answer the sefl-explanatory questions and within a few minutes you'll have it all ready to run.
+
+Don't worry if you don't have Docker installed (which is the only dependency) - the installer
+will also install Docker if necessary (though you'll need to start a new process and re-run
+the installer after it installs Docker).
+
+
+# Starting QEWD & QEWD-JSdb
+
+When the installer has completed you have two options for starting the Docker container:
+
+- without database persistence between Container restarts:
+
+        cd ~/qewd-jsdb
+        ./start
+
+- with database persistence between Container restarts:
+
+
+        cd ~/qewd-jsdb
+        ./start_p
+
+
+# Stopping QEWD & QEWD-JSdb
+
+To stop the Docker Container, you should always use the command:
+
+        cd ~/qewd-jsdb
+        ./stop
+
+This cleanly and safely shuts down the database-connected QEWD Worker Processes
 
 
 # Starting the Node.js REPL
@@ -55,6 +101,11 @@ You'll see this:
 
 
 The *jsdb* object provides you with access to QEWD-JSdb.  
+
+
+## Exiting the Node.js REPL
+
+You can exit the Node.js REPL in the usual way, by pressing the CTRL & C keys twice.
 
 
 # Start the Viewer Application
