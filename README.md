@@ -99,6 +99,8 @@ For the IRIS / AWS Version, see [these instructions](./IRIS.md).
 However, the quickest way to try out QEWD is using the pre-built Docker version which will run on
 any Linux system or even on a Raspberry Pi.
 
+FOllow the instructions below, or watch this [YouTube Video](https://www.youtube.com/watch?v=I2_ek8R_AwU).
+
 Here's all you need to do:
 
         cd ~
