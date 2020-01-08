@@ -3,7 +3,7 @@
  ----------------------------------------------------------------------------
  | QEWD-JSdb: Quick Installer                                               |
  |                                                                          |
- | Copyright (c) 2019 M/Gateway Developments Ltd,                           |
+ | Copyright (c) 2019-20 M/Gateway Developments Ltd,                        |
  | Redhill, Surrey UK.                                                      |
  | All rights reserved.                                                     |
  |                                                                          |
@@ -24,7 +24,7 @@
  |  limitations under the License.                                          |
  ----------------------------------------------------------------------------
 
-  23 November 2019
+  8 December 2020
 
 */
 
@@ -109,7 +109,7 @@ module.exports = function() {
     "#     - without persistence: ./start",
     "#",
     "echo 'Starting jsdb container'",
-    "docker run -d --name jsdb --rm --network qewd-jsdb -p {{port}}:8080 -v {{volume_path}}:/opt/qewd/mapped {{ydb_persistence}} {{container}}",
+    "docker run -d --name jsdb --rm --network qewd-jsdb -p {{port}}:{{internal_port}} -v {{volume_path}}:/opt/qewd/mapped {{ydb_persistence}} {{container}}",
     "echo 'jsdb Container has been started'"
   ];
 
@@ -191,7 +191,8 @@ module.exports = function() {
   }
 
   var settings = {
-    port: config.port || 8080
+    port: config.port || 8080,
+    internal_port: config.port || 8080
   };
 
   // JSdb Listener Port
@@ -216,7 +217,7 @@ module.exports = function() {
   console.log('QEWD-JSdb Port will be ' + port);
 
   settings.port = port;
-  config.qewd.port = port;
+  config.qewd.port = settings.internal_port;
 
   // QEWD Worker Process Pool
 
