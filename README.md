@@ -99,7 +99,7 @@ For the IRIS / AWS Version, see [these instructions](./IRIS.md).
 However, the quickest way to try out QEWD is using the pre-built Docker version which will run on
 any Linux system or even on a Raspberry Pi.
 
-FOllow the instructions below, or watch this [YouTube Video](https://www.youtube.com/watch?v=I2_ek8R_AwU).
+Follow the instructions below, or watch this [YouTube Video](https://www.youtube.com/watch?v=I2_ek8R_AwU).
 
 Here's all you need to do:
 
@@ -108,7 +108,7 @@ Here's all you need to do:
         cd qewd-jsdb
         source install.sh
 
-Simply answer the sefl-explanatory questions and within a few minutes you'll have it all ready to run.
+Simply answer the self-explanatory questions and within a few minutes you'll have it all ready to run.
 
 Don't worry if you don't have Docker installed (which is the only dependency) - the installer
 will also install Docker if necessary (though you'll need to start a new process and re-run
@@ -141,6 +141,11 @@ This cleanly and safely shuts down the database-connected QEWD Worker Processes
 
 Before going any further, it is recommended that you take the [QEWD-JSdb Tutorial](./REPL.md).  This is a hands-on
 guide which allows you to explore QEWD-JSdb using the Node.js REPL.
+
+You can also watch these videos:
+
+- [Introduction to the QEWD-JSdb REPL Explorer](https://www.youtube.com/watch?v=xZSiIimV_Yo)
+- [The Fine-grained Nature of QEWD-JSdb On-disk Objects](https://www.youtube.com/watch?v=Hg0PD_wlT4I)
 
 
 # The Viewer Application
