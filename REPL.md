@@ -1560,7 +1560,7 @@ Copy and paste the following functions into the REPL:
             // get the next id (1 will be returned the first time this is invoked)
             var id = telDoc.$('next_id').increment();
             // save and index the new record
-            saveAndIndex(id, recordObj, telDoc);
+            saveAndIndex(id, recordObj, jsdb);
             return id;
           }
         }
