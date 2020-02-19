@@ -135,15 +135,6 @@ $(document).ready(function() {
       });
     });
 
-    $('#selectAllBtn').on('click', function(e) {
-      var msg = {
-        type: 'selectAll'
-      };
-      EWD.send(msg, (responseObj) => {
-        $('#selectAll-response').text(JSON.stringify(responseObj.message, null, 2));
-      });
-    });
-
     $('#selectCustomBtn').on('click', function(e) {
 
       var fields = $('#selectCustom-fields').val();
