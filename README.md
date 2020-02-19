@@ -23,6 +23,10 @@ just a few minutes on any Linux system or on a Raspberry Pi
 
 # What is QEWD-JSdb?
 
+[Watch this video](https://www.youtube.com/watch?v=1TlAKTw167s&list=PLam_80-FY3vSPW9apMaczTN_4dtke9GYM),
+recorded at the [London Node User's Group (LNUG)](https://lnug.org/) meeting in January 2020, 
+in which the thinking behind QEWD-JSdb is explained.
+
 Every instance of [QEWD](https://github.com/robtweed/qewd) includes an in-process
 multi-model database which we refer to as *QEWD-JSdb*.
 
