@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cp -r www/components/adminui/examples/tutorial www/tutorial
-sudo mv www/tutorial/tutorial www/components/tutorial
+cp -r /opt/qewd/mg-webComponents/tutorial /opt/qewd/mapped/www/tutorial
+mv /opt/qewd/mapped/www/tutorial/components /opt/qewd/mapped/www/components/tutorial
 
