@@ -26,7 +26,7 @@ users of Piscina can take advantage of the unique Javascript database capabiliti
 and very high performance
 of QEWD-JSdb instead of using other, more 'traditional' databases.  
 
-See the other documentation
+See the [other documentation](./README.md)
 in this QEWD-JSdb repository to find out more about QEWD-JSdb.
 
 # Pre-requisites
