@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+export ydb_gbldir=$HOME/.yottadb/r1.28_x86_64/g/yottadb.gld
+export ydb_dir=$HOME/.yottadb
+export ydb_rel=r1.28_x86_64
+export ydb_routines="$HOME/.yottadb/r1.28_x86_64/o*($HOME/.yottadb/r1.28_x86_64/r $HOME/.yottadb/r) /usr/local/lib/yottadb/r128/libyottadbutil.so"
+export ydb_dist=/usr/local/lib/yottadb/r128
+$ydb_dist/mumps -dir
