@@ -30,7 +30,7 @@
 
 var http = require('http');
 
-const ydb_release = 'r1.28';
+const ydb_release = 'r1.30';
 
 
 function jsdb() {
