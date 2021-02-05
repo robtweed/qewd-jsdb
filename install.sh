@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Quick Installer for QEWD-JSDb
+# 5 February 2021
 
 # This starts the Node-Runner Container with the correct environment settings and parameters
 
@@ -17,6 +18,11 @@ if [ -x "$(command -v docker)" ]; then
     echo "Docker is already installed"
     # command
 else
+
+    sudo apt-get update
+    sudo apt-get -y upgrade
+    sudo apt-get install -y curl
+
     echo "Installing docker..."
 
     curl -sSL https://get.docker.com | sh

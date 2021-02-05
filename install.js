@@ -3,7 +3,7 @@
  ----------------------------------------------------------------------------
  | QEWD-JSdb: Quick Installer                                               |
  |                                                                          |
- | Copyright (c) 2019-20 M/Gateway Developments Ltd,                        |
+ | Copyright (c) 2019-21 M/Gateway Developments Ltd,                        |
  | Redhill, Surrey UK.                                                      |
  | All rights reserved.                                                     |
  |                                                                          |
@@ -24,7 +24,7 @@
  |  limitations under the License.                                          |
  ----------------------------------------------------------------------------
 
-  3 November 2020
+  5 February 2021
 
 */
 
@@ -347,8 +347,8 @@ module.exports = function() {
     os = 'rpi';
   }
 
-  if (!fs.existsSync(yottadb_path)) {
-    this.shell('svn export https://github.com/robtweed/yotta-gbldir-files/trunk/r1.30/' + os + '  ' + yottadb_path);
+  if (!fs.existsSync(yottadb_path + '/yottadb.dat')) {
+    this.shell('svn export --force https://github.com/robtweed/yotta-gbldir-files/trunk/r1.30/' + os + '  ' + yottadb_path);
   }
 
   // Create startup files for persistence and non-persistence
